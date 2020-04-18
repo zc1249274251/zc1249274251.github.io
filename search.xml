@@ -1,187 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Linux和网络</title>
-    <url>/2020/04/18/Linux%E5%92%8C%E7%BD%91%E7%BB%9C/</url>
-    <content><![CDATA[<p><strong>TCP与HTTP</strong></p>
-<ol>
-<li><p>HTTPS的加密方式是什么，讲讲整个加密解密流程。<br> 1.客户端（通常是浏览器）先向服务器发出加密通信的请求，发送协议版本，客户端生成随机数，加密方法等等<br> 2.服务端收到请求后回应，内容包含协议版本、服务端生成的随机数、加密方式、服务器证书<br> 3.客户端收到服务器回应以后，首先验证服务器证书。如果证书不是可信机构颁布、或者证书中的域名与实际域名不一致、或者证书已经过期，就会向访问者显示一个警告，由其选择是否还要继续通信。<br>  如果证书没有问题，客户端就会从证书中取出服务器的公钥。然后，向服务器发送下面三项信息。<br>   (1) 一个随机数。该随机数用服务器公钥加密，防止被窃听。<br>   (2) 编码改变通知，表示随后的信息都将用双方商定的加密方法和密钥发送。<br>   (3) 客户端握手结束通知，表示客户端的握手阶段已经结束。这一项同时也是前面发送的所有内容的hash值，用来供服务器校验。<br> 4.服务器收到客户端的第三个随机数pre-master key之后，计算生成本次会话所用的”会话密钥”。然后，向客户端最后发送下面信息。<br>   (1)编码改变通知，表示随后的信息都将用双方商定的加密方法和密钥发送。<br>   (2)服务器握手结束通知，表示服务器的握手阶段已经结束。这一项同时也是前面发送的所有内容的hash值，用来供客户端校验。</p>
-   <a id="more"></a></li>
-<li><p>http1.0和http1.1有什么区别。</p>
-</li>
-<li><p>TCP三次握手和四次挥手的流程，为什么断开连接要4次,如果握手只有两次，会出现什么。<br> 三次握手</p>
-<pre><code>1.客户端将SYN位置设为1，随机产生一个值，并将数据包发给服务端，服务端进入等待状态
-2.服务端向服务端发送请求，并进入等待接受状态
-3.客户端回应客户端收到请求，然后开始通信</code></pre><p> 四次挥手</p>
-<pre><code>因为TCP/IP协议是全双工通信
- 1.第一次挥手：Client发送一个FIN，用来关闭Client到Server的数据传送，Client进入FIN_WAIT_1状态。
- 2.第二次挥手：Server收到FIN后，发送一个ACK给Client，确认序号为收到序号+1（与SYN相同，一个FIN占用一个序号），Server进入CLOSE_WAIT状态。
- 3.第三次挥手：Server发送一个FIN，用来关闭Server到Client的数据传送，Server进入LAST_ACK状态。
- 4.第四次挥手：Client收到FIN后，Client进入TIME_WAIT状态，接着发送一个ACK给Server，确认序号为收到序号+1，Server进入CLOSED状态，完成四次挥手。</code></pre></li>
-<li><p>TIME_WAIT和CLOSE_WAIT的区别。<br>  CLOSE_WAIT是服务端<br>  TIME_WAIT是客户端</p>
-</li>
-<li><p>说说你知道的几种HTTP响应码，比如200, 302, 404。</p>
-</li>
-<li><p>当你用浏览器打开一个链接（如：<a href="http://www.javastack.cn/" target="_blank" rel="noopener">http://www.javastack.cn</a>）的时候，计算机做了哪些工作步骤。<br>   1.DNS解析<br>   2.TCP连接<br>   3.发送HTTP请求<br>   4.服务器处理请求并返回HTTP报文<br>   5.浏览器解析渲染页面<br>   6.连接结束</p>
-</li>
-<li><p>TCP/IP如何保证可靠性，说说TCP头的结构。</p>
-</li>
-<li><p>如何避免浏览器缓存。</p>
-</li>
-<li><p>如何理解HTTP协议的无状态性。<br> 无状态是指协议对于事务处理没有记忆能力，服务端不知道客户端什么状态</p>
-</li>
-<li><p>简述Http请求get和post的区别以及数据包格式。</p>
-</li>
-<li><p>HTTP有哪些method</p>
-</li>
-<li><p>简述HTTP请求的报文格式。</p>
-</li>
-<li><p>HTTP的长连接是什么意思。<br> 长连接就是客户端和服务端的TCP连接不会关闭</p>
-</li>
-<li><p>Http和https的三次握手有什么区别。</p>
-</li>
-</ol>
-<p>http状态码：200成功，303重定向 304   没有找到方法    403Forbidden 404 未找到页面 500 系统异常    502Bad Gateway  503  服务不可用</p>
-<ol start="15">
-<li>什么是分块传送。</li>
-<li>Session和cookie的区别。<br> 1.存取方式的不同  <pre><code>Cookie中只能保管ASCII字符串，
-Session中能够存取任何类型的数据</code></pre> 2.隐私策略的不同<pre><code>Cookie存储在客户端阅读器中，对客户端是可见的，
-Session存储在服务器上，对客户端是透明的，不存在敏感信息泄露的风险。</code></pre>3.服务器压力的不同<br>   Session存储在服务器上，请求量大会比较耗费内存<br>   Cookie保管在客户端，不占用服务器资源。<br>4.跨域支持上的不同<br>   Cookie支持跨域名访问<br>   Session仅在他所在的域名内有效。</li>
-<li>v                          </li>
-</ol>
-<p>19.应用层—表示层—-会话层—–传输层—–网络层——数据链路层——-物理层</p>
-]]></content>
-      <categories>
-        <category>技术</category>
-      </categories>
-      <tags>
-        <tag>面试</tag>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>分布式消息</title>
-    <url>/2020/04/18/%E5%88%86%E5%B8%83%E5%BC%8F%E6%B6%88%E6%81%AF/</url>
-    <content><![CDATA[<p><strong>消息队列</strong></p>
-<p>1.使用过哪些MQ？和其他mq比较有什么优缺点?<br>    activeMQ和RocketMQ<br>2.消息队列的使用场景<br>  1.异步化2.应用解耦<br>3.消息的重发,补充策略<br>    消息重发指的是borker发送给消费者，但消费者处理失败，borker会去重发消息,超过设定次数，lister消费者会给borker发送一个毒ACK消息，borker将该消息放入死信队列中<br>    默认是6次，<br>    重发时间间隔,默认为1s<br>    重投延时<br>  重发需要有幂等性考虑<br>  <a id="more"></a><br>4.如何保证消息的有序性<br>    在MQ中创建多条QUEUE,针对同一规则的数据放入相同队列，比如订单(下单，支付，)，把相同订单号的放入一个队列中，后端消费者消费就行了，<br>    这种可能会有消息重复问题<br>5.消息重复问题<br>    1.保证业务的幂等性(需要在消费段做)<br>    2.保证每条消息都有唯一编号且保证消息处理成功与去重表的日志同时出现</p>
-<p>5.MQ的连接是线程安全的吗，你们公司的MQ服务架构怎样的。</p>
-<p>6.MQ系统的数据如何保证不丢失<br>   消息丢失场景：<br>      1.生产者消息丢失<br>          1.消息确认模式，分配唯一的ID，只有队列写成功了，回传一个确认的ACK<br>          2.开启一个事务，没有被消费者消费，就事务回滚<br>      2.消息队列消息丢失<br>          1.数据持久化<br>          2.消费完成确认后再删除消息<br>      3.消费端消息丢失<br>          消息丢失，未收到确认的ACK，就重发一次，但是做幂等性处理</p>
-<p>7.MQ消息如何做到幂等<br>       1.消息队列分配无关业务、全局唯一的ID<br>       2.业务上自己做消息幂等性<br>8.MQ的消息延迟了怎么处理，</p>
-<p>9.利用mq怎么实现最终一致性<br>    1.保证消息不丢失<br>    2.保证消息能被消费正常处理<br>    3.由数据库来做最终的一致性保证</p>
-<p>10.如何保证消息队列是高可用的<br>   多种Master/slave模式的集群<br>    1.Shared Nothing Master/Slave  master收到消息同步完slave才响应ACK<br>    2.Shared Database Master/Slave master和slave数据共享，然后数据库的排他锁来竞争，谁拿到锁，谁是master<br>    3.Shared File system Master/Slave   共享文件锁<br>    4.Replicated LevelDB Store   利用zookeer来选举</p>
-<p>11.消息可以设置过期时间么，过期了你们一般怎么处理<br>    消息可以设置过期时间，一般过期后会被放入死信队列<br>    死信处理策略：<br>       1.不使用默认死信队列，不便于管理<br>       2.持久化消息不放入死信队列<br>       3.非持久化消息放入<br>       4.过期消息不保存到死信队列<br>       5.丢弃所有死信<br>       6.丢弃指定死信<br>       7.丢弃正则死信</p>
-<p>12.MQ消息积压问题<br>     一般MQ消息积压是因为消费者这边出了问题，所以思路是：<br>          1.先解决消费者的问题，让其能正常消费<br>          2.提升消费者的消费能力，紧急扩容<br>          3.假如队列满了，就粗暴一点，临时写程序来介入数据消费，写完就丢掉消息<br>15.MQ的技术选型<br>    ActiveMQ<br>      优点:Java开发，相对简单，功能比较完备<br>      缺点:社区不活跃<br>    RocketMQ<br>       优点:社区活跃，大公司里技术支持，功能完备，经得起考验<br>       缺点：<br>    RabbitMQ<br>        优点:<br>        缺点：erlang语言比较少，出问题了不好处理<br>JMS—–&gt;ActiveMq<br>AMQP—–&gt;RockerMQ</p>
-<p>1.JMS<br>  JMS是java的消息服务，JMS的客户端之间可以通过JMS服务进行异步的消息传输。<br>2.JMS消息模型<br>   点对点和发布订阅<br>3.MOM 就是面向消息中间件（Message-oriented middleware），是用于以分布式应用或系统中的异步、松耦合、可靠、可扩展和安全通信的一类软件。MOM 的总体思想是它作为消息发送器和消息接收器之间的消息中介,这种中介提供了一个全新水平的松耦合。<br>4.AMQP，即Advanced Message Queuing Protocol,一个提供统一消息服务的应用层标准高级消息队列协议，是应用层协议的一个开放标准,为面向消息的中间件设计<br>ActiveMq相关知识<br>  1.ActiveMq流程<br>     生产者工作流程:<br>       1.创建连接工厂：ConnectionFactory factory = new ActiveMQConnectionFactory(userName,password,url)<br>       2.创建连接：Connection conn= factory.createConnection();<br>       3.打开连接：conn.start()<br>       4.创建会话并设置会话级别：Session session = conn.createSession(true,Session.SESSION_TRANSACTED);<br>       5.创建消息队列：Queue queue = session.createQueue(name);<br>       6.创建或者获取生产者：MessageProducer produer = session.createProducer(queue);<br>       7.生成者发送消息：producer.send();<br>       8.提交会话事务：session.commit();<br>      消费者工作流程:<br>          1.创建连接工厂：ConnectionFactory factory = new ActiveMQConnectionFactory(userName,password,url)<br>          2.创建连接：Connection conn= factory.createConnection();<br>          3.开始连接：conn.start()<br>          4.创建会话并设置会话级别：Session session = conn.createSession(true,Session.SESSION_TRANSACTED);<br>          5.创建消息队列：Queue queue = session.createQueue(name);<br>          6.创建或者获取生产者：MessageProducer produer = session.createProducer(queue);<br>          7.生成者发送消息：producer.send();<br>          8.提交会话事务：session.commit();</p>
-<p>  2.消息存储方式<br>     1.KahaDB存储(默认方式)<br>         KahaDB的存储原理：<br>           在data/kahadb这个目录下，会生成四个文件：<br>               Ø db.data 它是消息的索引文件，本质上是B-Tree（B树），使用B-Tree作为索引指向db-.log里面存储的消息<br>               Ø db.redo 用来进行消息恢复<br>               Ø db-.log 存储消息内容。新的数据以APPEND的方式追加到日志文件末尾。属于顺序写入，因此消息存储是比较快的。默认是32M，达到阀值会自动递增<br>               Ø lock文件 锁，表示当前获得kahadb读写权限的broker<br>     2.JDBC存储<br>     3.内存<br>  3. 支持同步、异步两种发送模式将消息发送到broker上，<br>         同步会要求broker给一个响应，因为是阻塞操作，会影响到客户端<br>         异步发送者不需要等待broker提供反馈，所以性能相对较高。但是可能会出现消息丢失的情况。</p>
-]]></content>
-      <categories>
-        <category>技术</category>
-      </categories>
-      <tags>
-        <tag>面试</tag>
-        <tag>分布式</tag>
-        <tag>消息队列</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>分布式缓存</title>
-    <url>/2020/04/18/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/</url>
-    <content><![CDATA[<p><strong>缓存</strong><br>1.Redis的数据结构都有哪些。<br>  String  hash  list  set soreSet<br>2.如何防止缓存穿透、雪崩和击穿。<br>  缓存穿透:1.布隆过滤器(存在误杀) 2.存储空null，但存活时间很短5分钟<br>  缓存雪崩:1.将失效过期时间随机性分布<br>  缓存击穿:采用互斥锁或者分布式锁来处理<br>  穿透和击穿的区别在于:穿透对于大量key，而击穿针对的是单key<br>  <a id="more"></a><br>3.缓存数据过期后的更新如何设计。<br>  1.请求来的时候，先读缓存，保存一个空key，然后再去读数据库，如果数据库有，再写回到缓存上<br>4.如何做到缓存(比如redis)与DB里的数据一致性，你们项目中用到了什么缓存系统，如何设计的。<br>   1.数据先落库，再删除缓存<br>   2.请求来的时候，先读缓存，如果缓存没有，然后再去读数据库，如果数据库有，再写回到缓存上<br>   但是需要注意的是，缓存的穿透和、雪崩、击穿等问题<br>5.Redis的使用要注意什么，内存设置<br>   1.注意建表规范<br>   2.存储数据，设计k-v时候注意可读性，避免大value等<br>   内存设置：<br>     1.通过info命令来查看<br>     2.最好设置max memory 不要超过机器最大内存<br>7.当前redis集群有哪些玩法，各自优缺点，场景。<br>   1.官方的cluser方案；<br>       提出了槽(slot)的概念，16384个，对于Redis的键值对进行散列，分配到这些槽中的一个，然后用节点对应着每一个槽，官方推荐将节点配置成主从，假如主节点失效，通过选举算法会从salve中选出来一个，完全去中心化，配置比较简单，但是出来较晚，使用者不是很多<br>   2.codis；</p>
-<p>   3.哨兵；</p>
-<p>8.Redis的并发竞争问题如何解决，了解Redis事务的CAS操作吗。<br>   key 并发写的问题，<br>   1.可以使用乐观锁来处理<br>   2.使用分布式锁来处理<br>9.Redis的选举算法和流程是怎样的。<br>      Raft协议，通过心跳和选举算法实现哨兵， 主观失效和客观失效，<br>10.redis的持久化的机制，aof和rdb的区别。<br>    RDB 就是在不同的时间点，将redis存储的数据生成快照并存储到磁盘等介质上；<br>       通过bgSave命令触发，从主进程fork()一个子进程来，生成父进程内存中数据快照，然后再替换原文件，  fork会阻塞父进程<br>       优点:1.二进制文件，适合全量备份<br>            2.执行速度比AOF要快<br>        缺点：<br>            1.新老版本的RDB文件不一定兼容<br>            ２.没法做到秒级<br>            ３.fork属于重量操作，不能轻易操作<br>    AOF  持久化记录服务器执行的所有写操作命令<br>        1.将写命令写道缓冲区<br>        2.AOF缓冲区将根据相关策略向磁盘上同步<br>        3.因为AOF文件会越变越大，需要定时对AOF文件重写，达到压缩的目的<br>11.redis的集群怎么同步的数据的。</p>
-<p>12.知道哪些redis的优化操作。<br>    1.让键名保持简短,可读性更强<br>    2.对key最好都带上过期时间<br>    3.避免超大容量key<br>13.Reids的主从复制机制原理。<br>    分为两种复制:<br>    从节点使用psync()来实现同步<br>       1.全量同步<br>           1.主服务器收到同步请求，执行bgsave命令，同时使用缓冲区暂存命令<br>           2.bgsave完成后将rdb文件发送给从服务器，从服务器收到RDB文件后，将数据保存到磁盘，然后加载到内存中<br>           3.然后主服务器再将缓冲区的命令发给从服务器，从服务器执行这些命令<br>        2.部分同步  主要用于节点丢失，做数据补发<br>            主从节点分别保存着一个数据偏移量，来验证数据的一致性<br>            从节点把自身偏移量发给主节点，主节点根据偏移量把挤压缓冲区中数据发送给从节点<br>14.Redis的线程模型是什么。<br>    多路复用IO<br>15.Redis的淘汰策略<br>    volatile-lru： 只对设置了过期时间的key进行LRU（默认值）<br>    noeviction ： 永不过期，返回错误</p>
-<pre><code>volatile-random：过期key随机删除
- volatile-ttl ： 删除即将过期的
-
-  allkeys-random： 全量Key中随机删除
-  allkeys-lru ：   全量Key进行LRU</code></pre><p>16.热点Key问题<br>    1.使用互斥锁来实现，只允许一个线程构建缓存<br>    2.key”永久”存储<br>    3.对热点问题先一步业务分析，可以将数据分布到集群中<br>17.Redis 高效问题<br>     1.绝大部分请求是纯粹的内存操作（非常快速）<br>     2.采用单线程,避免了不必要的上下文切换和竞争条件<br>     3.非阻塞IO<br>15.Memcache的原理，哪些数据适合放在缓存中。</p>
-<p>16.redis和memcached 的内存管理的区别。<br>17.简述本地缓存和分布式缓存和优缺点。<br>   本地缓存<br>    优点：性能高，没有网络消耗<br>    缺点：没有持久化机制，难保持数据一致性，存储数量小，受GC影响<br>   分布式缓存：<br>   优点：数据集中，易于维护数据一致性，中间件可以实现对内存的统一管理，便于水平扩容<br>   缺点: 有网络以及序列化和反序列化消耗，一般以来中间件来处理</p>
-<p>18.本地缓存在并发使用时的注意事项。</p>
-<p>19.Ehcache原理 有几种<br>   1 FIFO，先进先出<br>   2 LFU，最少被使用，缓存的元素有一个hit属性，hit值最小的将会被清出缓存。<br>   3 LRU，最近最少使用的，缓存的元素有一个时间戳，当缓存容量满了，而又需要腾出地方来缓存新的元素的时候，</p>
-]]></content>
-      <categories>
-        <category>技术</category>
-      </categories>
-      <tags>
-        <tag>面试</tag>
-        <tag>分布式</tag>
-        <tag>缓存</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>分布式事务</title>
-    <url>/2020/04/18/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/</url>
-    <content><![CDATA[<p>1.分布式事务<br>  2PC<br>    第一阶段是预提交<br>       要求所有参与者提交事务<br>       反馈提交结果<br>    第二阶段要求事务提交或者回滚<br>    如果全是OK，就提交事务<br>    有一个不OK就回滚<br>    <a id="more"></a><br>  3PC<br>     第一阶段询问参与者能否提交<br>     第二阶段所有参与者反馈能提交，就发出提交事务请求<br>     第三阶段 反馈提交结果，完成事务提交<br>   XA协议比较简单，但是有单点问题，由于阻塞所以不能很好的支持并发，很依赖事务管理器<br>    TCC<br>    Try阶段：尝试执行,完成所有业务检查（一致性）,预留必须业务资源（准隔离性）<br>    Confirm阶段：确认执行真正执行业务，不作任何业务检查，只使用Try阶段预留的业务资源，Confirm操作满足幂等性。要求具备幂等设计，Confirm失败后需要进行重试。<br>    Cancel阶段：取消执行，释放Try阶段预留的业务资源 Cancel操作满足幂等性Cancel阶段的异常和Confirm阶段异常处理方案基本上一致。</p>
-<p>2.CAP理论<br>Consistency(一致性), 数据一致更新，所有数据变动都是同步的<br>Availability(可用性):系统提供的服务对于用户的请求，总是能在“有限的时间”内“返回结果”<br>P (分区容错性)：服务在遇到任何网络分区故障时，仍然能提供一致性和可用性的服务</p>
-<p>3.BASE理论<br>　BASE是Basically Available(基本可用)，Soft state(软状态)，Eventually consistent(最终一致性)这三个短语的简写。<br>可以简单BASE理论是对CAP权衡后演化而来的结果<br>基本可用：分布式系统在出现不可预知的故障时，允许损失部分可用性(响应时间延长/部分非核心功能不可用，有点降级的意思)<br>软状态：允许数据存在中间状态，并且认为该中间状态的存在不会影响系统的整体可用性<br>最终一致性：系统中所有副本的数据，在经过一段时间后，最终能达到一致</p>
-]]></content>
-      <categories>
-        <category>技术</category>
-      </categories>
-      <tags>
-        <tag>面试</tag>
-        <tag>分布式</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>开源框架</title>
-    <url>/2020/04/18/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/</url>
-    <content><![CDATA[<p>1.Spring 核心模块</p>
-<p>core 提供依赖注入和Bean管理功能，主要组件是 BeanFactory，<br>ORM Spring支持多种ORM框架，简化了数据库操作。<br>web 建立于Context模块之上，提供了一个适合于Web应用的上下文,同时还提供和其他web服务的支持<br>Context 扩展了BeanFactory的概念，增加了对国际化、事件传播，<br>AOP 为Spring容器管理的对象提供了对面向切面编程的支持；<br>DAO 该层封装了对数据库的访问，并且处理了其抛出的错误消息，同时还基于AOP模块提供了事务管理；<br>MVC：是一个全功能的构建 Web 应用程序的 MVC 实现，容纳了大量视图技术，如 JSP、Velocity、POI等；</p>
-<a id="more"></a>
-<p>2.Spring IOC<br>  控制反转，是一种设计思想，Ioc意味着将你设计好的对象交给容器控制，而不是传统的在你的对象内部直接控制。<br>    1.调用refresh()方法开始<br>    2.Rosource资源定位  resourceLoader<br>    3.资源载入 将指定用户的Bean表示成BeanDefiontione<br>    4.注册  将bean注册到一个map容器中</p>
-<p>3.Bean的生命周期:<br>1.实例化bean<br>2.设置依赖注入<br>3.注入Auto接口<br>4.初始化Bean<br>5.使用<br>6.卸载<br><a href="https://www.zhihu.com/question/38597960" target="_blank" rel="noopener">https://www.zhihu.com/question/38597960</a></p>
-<p>加载第三方的Bean @Configuration  +@Bean</p>
-<p>spring事务传播属性:</p>
-<p>Propagation.REQUIRED（required）：支持当前事务，如果当前有事务， 那么加入事务， 如果当前没有事务则新建一个(默认情况)<br>Propagation.NOT_SUPPORTED（not_supported) ： 以非事务方式执行操作，如果当前存在事务就把当前事务挂起，执行完后恢复事务（忽略当前事务）；<br>Propagation.SUPPORTS (supports) ：如果当前有事务则加入，如果没有则不用事务。<br>Propagation.MANDATORY (mandatory) ：支持当前事务，如果当前没有事务，则抛出异常。（当前必须有事务）<br>PROPAGATION_NEVER (never) ：以非事务方式执行，如果当前存在事务，则抛出异常。（当前必须不能有事务）<br>Propagation.REQUIRES_NEW (requires_new) ：支持当前事务，如果当前有事务，则挂起当前事务，然后新创建一个事务，如果当前没有事务，则自己创建一个事务。<br>Propagation.NESTED (nested 嵌套事务) ：如果当前存在事务，则嵌套在当前事务中。如果当前没有事务，则新建一个事务自己执行（和required一样）。嵌套的事务使用保存点作为回滚点，当内部事务回滚时不会影响外部事物的提交；但是外部回滚会把内部事务一起回滚回去。（这个和新建一个事务的区别）<br> 当前事务？</p>
-<p>3.Spring AOP<br>   面向切面编程<br>    连接点：能够被拦截的地方<br>    切点：每个方法都可以称之为连接点，我们具体定位到某一个方法就成为切点。<br>    通知:前置、后置、返回、异常、环绕</p>
-<p>  AOP使用:权限、日志、缓存<br>3.AOP实现方式三种：1.JDK动态代理 2.Cglib字节码 3.Aspet增强<br>  JDK动态代理和Cglib字节码区别<br>     动态代理<br>       1.通过实现 InvocationHandler 接口创建自己的调用处理器<br>       2.通过为 Proxy 类指定 ClassLoader 对象和一组 interface 来创建动态代理类<br>       3.通过反射机制获得动态代理类的构造函数<br>       4.通过构造方法将自定义的处理类当参数放入。<br>       5.通过构造函数创建动态代理类实例，构造时调用处理器对象作为参数被传入<br>     Cglib<br>      1.通过asm字节码生成框架生成代理类Class的二进制字节码<br>      2.通过Class.forName加载二进制字节码，生成Class对象<br>      3.通过反射机制获取实例构造，并初始化代理类对象<br>    1.动态代理需要实现接口，cglib需要继承<br>    2.动态代理通过类加载和反射来生成代理类,cglib是基于字节码来生成</p>
-<p>4.依赖注入方式<br>    setget注入<br>    构造器注入<br>    注解注入<br>    接口注入 有侵入性<br>5.相关注解<br>@Autowired默认按类型装配 假如有相同的Bean，再按名称匹配<br>@Qualifier名称装配<br>@Resource 是JDK1.6支持的注解，默认按照名称进行装配<br>6.Spring的事物传播属性<br>  七中事务传播机制 REQUIRED, REQUIRES_NEW等等</p>
-<p>5.SpringMvc 原理<br>    (1) Http请求：客户端请求提交到DispatcherServlet。<br>    (2) 寻找处理器：由DispatcherServlet控制器查询一个或多个HandlerMapping，找到处理请求的Controller。<br>    (3) 调用处理器：DispatcherServlet将请求提交到Controller。<br>    (4)(5)调用业务处理和返回结果：Controller调用业务逻辑处理后，返回ModelAndView。<br>    (6)(7)处理视图映射并返回模型： DispatcherServlet查询一个或多个ViewResoler视图解析器，找到ModelAndView指定的视图。<br>    (8) Http响应：视图负责将结果显示到客户端。</p>
-<p>6.Servlet 干了什么<br>   DispatcherServlet  继承  FrameworkServlet  继承 HttpServletBean  并且它也继承自 HttpServlet<br>   HttpServletBean 主要做一些初始化的工作，将web.xml中配置的参数设置到Servlet中。比如servlet标签的子标签init-param标签中配置的参数。<br>   FrameworkServlet   初始化webApplicationContext，建立springMVC 上下文，并于父类spring上下文关联<br>   DispatcherServlet  初始化各个功能的实现类。比如异常处理、视图处理、请求映射处理等。<br>7.Mybaties 原理<br>   1.通过configuration解析config.xml配置文件和mapper.xml映射文件，映射文件可以使用xml方式或者注解方式<br>   2.然后由configuration获得sqlsessionfactory对象，再由sqlsessionfactory获得sqlsession数据库访问会话对象，<br>   3.通过JDK动态代理生成Mapper文件的代理类<br>8.Mybaties 二级缓存和更新策略<br>    一级缓存是SqlSession级别的，如果同一个SqlSession中使用了相同的SQL，只有第一次会查询数据库，假如有了DML语句，将会一级缓存<br>    二级缓存是跨SqlSession，不同的SqlSession两次执行相同的namespace下的sql语句，<br>    LRU默认<br>    FIFO<br>    软引用<br>    弱引用<br>    #{}是经过预编译的,是安全的。<br>    而${}是未经过预编译的,仅仅是取变量的值,是非安全的,存在SQL注入。</p>
-<p>9.Dubbo的原理，<br>   1.消费方调用本地服务<br>   2.本地服务将参数方法等信息组装成网络传输的消息体<br>   3.本地服务找到服务地址，并将消息发给服务端<br>   4.服务端本地服务收到消息后进行解码<br>   5.服务端本地服务调用本地服务，本地服务做业务处理，然后再把结果转给服务端<br>   6.服务端就结果打包成网络传输的消息体<br>   7.客户端收到消息进行转码然后给消费方<br>10.数据怎么流转的，怎么实现集群，负载均衡，服务注册，和发现，重试转发，快速失败的策略是怎样的</p>
-<ol>
-<li><p>dubbo服务治理、服务降级以及重试<br>1.调用链路自动生成<br>2.服务访问压力以及时长统计 主要看全链路，TP50/TP90/TP99<br>3.服务分层、调用链路失败监控报警、服务监控<br>2.服务降级<br>假如两个服务调用多次失败，就走降级备用逻辑给用户响应/<br>3.服务重试00<br>①失败重试<br>consumer调用provider失败了，比如provider出现了异常，这时候就要进行重试。<br>②服务超时<br>设置超时时间<br>重试：6次，超时：200ms</p>
-<p>dubbo提供了负载均衡:1.Random 2.随机，按权重设置随机概率。 3. 轮循，按公约后的权重设置轮循比率。4.最少活跃 5.一致性hash<br>快速失败策略：</p>
-</li>
-</ol>
-<p>   //添加事务注解<br>    //1.使用 propagation 指定事务的传播行为, 即当前的事务方法被另外一个事务方法调用时<br>    //如何使用事务, 默认取值为 REQUIRED, 即使用调用方法的事务<br>    //REQUIRES_NEW: 事务自己的事务, 调用的事务方法的事务被挂起.<br>    //2.使用 isolation 指定事务的隔离级别, 最常用的取值为 READ_COMMITTED<br>    //3.默认情况下 Spring 的声明式事务对所有的运行时异常进行回滚. 也可以通过对应的<br>    //属性进行设置. 通常情况下去默认值即可.<br>    //4.使用 readOnly 指定事务是否为只读. 表示这个事务只读取数据但不更新数据,<br>    //这样可以帮助数据库引擎优化事务. 若真的事一个只读取数据库值的方法, 应设置 readOnly=true<br>    //5.使用 timeout 指定强制回滚之前事务可以占用的时间.<br>    @Transactional(propagation=Propagation.REQUIRES_NEW,<br>            isolation=Isolation.READ_COMMITTED,<br>            noRollbackFor={UserAccountException.class},<br>            rollbackFor = IOException.class,<br>            readOnly=false,<br>            timeout=3)   传播属性、隔离级别、是否只读、超时时间<br>    @Override<br>    public void purchase(String username, String isbn) {}<br>11.zk原理<br>12.什么是paxos算法， 什么是zab协议。<br>    zab协议采用的paxos算法， leader节点失效，迅速从从节点中重新选出一个替代者<br>   Paxos算法的目标就是让他们按照少数服从多数的方式，最终达成一致意见。</p>
-<p>13.Zookeeper watch机制原理。</p>
-<p>14.ngnix原理<br>   ngnix反向代理和负载均衡<br>    轮询<br>    加权轮询<br>    源地址哈希法<br>    随机<br>    最小连接数法<br>15.ngnix限流<br>  limit_req_zone：通过“漏桶”算法限制每个 IP 发起的请求频率。<br>limit_conn_zone：限制每个 IP 发起的连接数。<br>正向和反向代理</p>
-<p>16.简单讲讲tomcat结构，以及其类加载器流程，线程模型等。<br>    tomcat就是一个server ，一个server对应多个service，一个service对应对应多个Connector 和 Container，其中Connector 主要负责对外交流，Container 主要处理 Connector 接受的请求<br>17.tomcat如何调优，涉及哪些参数<br>   1.提高JVM栈内存Increase JVM heap memory<br>      Xms – 指定初始化时化的栈内存<br>     -Xms – 指定初始化时化的栈内存<br>      -Xmx – 指定最大栈内存<br>    2. – 线程池设置<br>       maxThreads<br>常用限流方法；<br>   1.计数器法<br>       一分钟只能有100个请求<br>         缺点：没法处理临界值问题<br>   1.漏桶算法<br>       消费速率一定，但进量会受到限制，座椅用过流程整形<br>   2.令牌桶算法<br>      往桶里添加令牌，请求来了，从桶里申请令牌，如果有，则去消费，没有就排队或者丢弃请求</p>
-<p>降级：技术降级、服务开关</p>
-<p>过滤器和拦截器的区别：</p>
-<pre><code>  1、拦截器是基于java的反射机制的，而过滤器是基于函数回调 
-  2、拦截器不依赖与servlet容器，过滤器依赖与servlet容器
-  3、拦截器只能对action请求起作用，而过滤器则可以对几乎所有的请求起作用 
-  4、拦截器可以多次被调用，而过滤器只能在容器初始化时被调用一次 
-拦截器 ：是在面向切面编程的就是在你的service或者一个方法，前调用一个方法，或者在方法后调用一个方法比如动态代理就是拦截器的简单实现，在你调用方法前打印出字符串（或者做其它业务逻辑的操作），也可以在你调用方法后打印出字符串，甚至在你抛出异常的时候做业务逻辑的操作。
-
- web.xml 的加载顺序是：</code></pre><p>context-param -&gt; listener -&gt; filter -&gt; servlet ，而同个类型之间的实际程序调用的时候的顺序是根据对应的 mapping 的顺序进行调用的。</p>
-<p>netty 相关<br>   1.Netty 的线程模型<br>      1、Reactor单线程模型<br>           1.作为 NIO 服务端，接收客户端的 TCP 连接；<br>           2.作为 NIO 客户端，向服务端发起 TCP 连接；<br>           3.读取通信对端的请求或者应答消息；<br>           4.向通信对端发送消息请求或者应答消息。<br>      2、Reactor多线程模型<br>            1.有专门一个 NIO 线程 Acceptor 线程用于监听服务端，接收客户端的 TCP 连接请求；<br>            2.网络 IO 操作 - 读、写等由一个 NIO 线程池负责，线程池可以采用标准的 JDK 线程池实现，它包含一个任务队列和 N 个可用的线程，由这些 NIO   线程负责消息的读取、解码、编码和发送；<br>            4.1个 NIO 线程可以同时处理 N 条链路，但是 1 个链路只对应 1 个 NIO 线程，防止发生并发操作问题。</p>
-<pre><code>  3、主从多线程模型
-
-        Netty 通过 Reactor 模型基于多路复用器接收并处理用户请求，内部实现了两个线程池，boss 线程池和 work 线程池，其中 boss 线程池的线程负责处理请求的 accept 事件，当接收到 accept 事件的请求时，把对应的 socket 封装到一个 NioSocketChannel 中，并交给 work线程池，其中 work 线程池负责请求的 read 和 write 事件，由对应的 Handler 处理。   
-2.TCP 粘包/拆包的原因及解决方法
-   因为是走TCP/IP 协议，一个完整的包会被拆成多个包发送，
-    粘包和半包
-    粘包就是数据包多了一截，半包就是少了一部分
-解决办法：
-  1.消息定长
-  2.包尾增加结束标识
-3.Netty空转问题
-   定义一个当前时间currentTimeNanos，接着计算出一个执行最少需要的时间timeoutMillis。每次对selectCnt做++操作。
-  若在某个周期内连续发生N次空轮询，则触发了epoll死循环bug，就重建Selector   默认512
-4.</code></pre>]]></content>
-      <categories>
-        <category>技术</category>
-      </categories>
-      <tags>
-        <tag>面试</tag>
-        <tag>框架</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Java基础</title>
     <url>/2020/04/18/Java%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<p>1.基础<br>  1.1数组为啥能[i]取值？<br>      数组（Array)是一种线性表数据结构。它用一组连续的内存空间，来存储一组具有相同类型的数据<br>  1.2 基本数据类型<br>      byte、short、int、double、long、float、boolean、char<br>  1.3.String的HashCode<br>      String 是char[]数组组成<br>      String 的 char 数组的数字每次乘以 31 再叠加最后返回   hashcode=char[i]* 31+hashcode;<br>      31 有个很好的性能,可以得到更好的性能  31 * i == (i &lt;&lt; 5） - i<br>  1.4 hashcode和equals实现？这么做有何优劣。<br>        equals和HashCode 都是object的方法，equals需要重写，假如没重写和==效果相同，<br>        1.重写了equals()没有重写HashCode()  会导致equals相等的两个对象，hashcode()不等<br>        2.重写了HashCode() 没有重写eauals（） 其实这个和== 效果相同  没有比较作用<br>  1.5 error和exception的区别，CheckedException，RuntimeException的区别。<br>     error和exception的均继承Throwable  Error（错误）是系统中的错误，程序是不能改变的和处理的 异常是程序可能出现的问题<br>     runtimeException不用显示try()catch() 空指针 数据越界 类型转换 IO异常 数据库异常</p>
@@ -365,6 +184,203 @@ LinkedBlockingQueue的容量是没有上限的（说的不准确，在不指定�
       </tags>
   </entry>
   <entry>
+    <title>分布式消息</title>
+    <url>/2020/04/18/%E5%88%86%E5%B8%83%E5%BC%8F%E6%B6%88%E6%81%AF/</url>
+    <content><![CDATA[<p><strong>消息队列</strong></p>
+<p>1.使用过哪些MQ？和其他mq比较有什么优缺点?<br>    activeMQ和RocketMQ<br>2.消息队列的使用场景<br>  1.异步化2.应用解耦<br>3.消息的重发,补充策略<br>    消息重发指的是borker发送给消费者，但消费者处理失败，borker会去重发消息,超过设定次数，lister消费者会给borker发送一个毒ACK消息，borker将该消息放入死信队列中<br>    默认是6次，<br>    重发时间间隔,默认为1s<br>    重投延时<br>  重发需要有幂等性考虑<br>  <a id="more"></a><br>4.如何保证消息的有序性<br>    在MQ中创建多条QUEUE,针对同一规则的数据放入相同队列，比如订单(下单，支付，)，把相同订单号的放入一个队列中，后端消费者消费就行了，<br>    这种可能会有消息重复问题<br>5.消息重复问题<br>    1.保证业务的幂等性(需要在消费段做)<br>    2.保证每条消息都有唯一编号且保证消息处理成功与去重表的日志同时出现</p>
+<p>5.MQ的连接是线程安全的吗，你们公司的MQ服务架构怎样的。</p>
+<p>6.MQ系统的数据如何保证不丢失<br>   消息丢失场景：<br>      1.生产者消息丢失<br>          1.消息确认模式，分配唯一的ID，只有队列写成功了，回传一个确认的ACK<br>          2.开启一个事务，没有被消费者消费，就事务回滚<br>      2.消息队列消息丢失<br>          1.数据持久化<br>          2.消费完成确认后再删除消息<br>      3.消费端消息丢失<br>          消息丢失，未收到确认的ACK，就重发一次，但是做幂等性处理</p>
+<p>7.MQ消息如何做到幂等<br>       1.消息队列分配无关业务、全局唯一的ID<br>       2.业务上自己做消息幂等性<br>8.MQ的消息延迟了怎么处理，</p>
+<p>9.利用mq怎么实现最终一致性<br>    1.保证消息不丢失<br>    2.保证消息能被消费正常处理<br>    3.由数据库来做最终的一致性保证</p>
+<p>10.如何保证消息队列是高可用的<br>   多种Master/slave模式的集群<br>    1.Shared Nothing Master/Slave  master收到消息同步完slave才响应ACK<br>    2.Shared Database Master/Slave master和slave数据共享，然后数据库的排他锁来竞争，谁拿到锁，谁是master<br>    3.Shared File system Master/Slave   共享文件锁<br>    4.Replicated LevelDB Store   利用zookeer来选举</p>
+<p>11.消息可以设置过期时间么，过期了你们一般怎么处理<br>    消息可以设置过期时间，一般过期后会被放入死信队列<br>    死信处理策略：<br>       1.不使用默认死信队列，不便于管理<br>       2.持久化消息不放入死信队列<br>       3.非持久化消息放入<br>       4.过期消息不保存到死信队列<br>       5.丢弃所有死信<br>       6.丢弃指定死信<br>       7.丢弃正则死信</p>
+<p>12.MQ消息积压问题<br>     一般MQ消息积压是因为消费者这边出了问题，所以思路是：<br>          1.先解决消费者的问题，让其能正常消费<br>          2.提升消费者的消费能力，紧急扩容<br>          3.假如队列满了，就粗暴一点，临时写程序来介入数据消费，写完就丢掉消息<br>15.MQ的技术选型<br>    ActiveMQ<br>      优点:Java开发，相对简单，功能比较完备<br>      缺点:社区不活跃<br>    RocketMQ<br>       优点:社区活跃，大公司里技术支持，功能完备，经得起考验<br>       缺点：<br>    RabbitMQ<br>        优点:<br>        缺点：erlang语言比较少，出问题了不好处理<br>JMS—–&gt;ActiveMq<br>AMQP—–&gt;RockerMQ</p>
+<p>1.JMS<br>  JMS是java的消息服务，JMS的客户端之间可以通过JMS服务进行异步的消息传输。<br>2.JMS消息模型<br>   点对点和发布订阅<br>3.MOM 就是面向消息中间件（Message-oriented middleware），是用于以分布式应用或系统中的异步、松耦合、可靠、可扩展和安全通信的一类软件。MOM 的总体思想是它作为消息发送器和消息接收器之间的消息中介,这种中介提供了一个全新水平的松耦合。<br>4.AMQP，即Advanced Message Queuing Protocol,一个提供统一消息服务的应用层标准高级消息队列协议，是应用层协议的一个开放标准,为面向消息的中间件设计<br>ActiveMq相关知识<br>  1.ActiveMq流程<br>     生产者工作流程:<br>       1.创建连接工厂：ConnectionFactory factory = new ActiveMQConnectionFactory(userName,password,url)<br>       2.创建连接：Connection conn= factory.createConnection();<br>       3.打开连接：conn.start()<br>       4.创建会话并设置会话级别：Session session = conn.createSession(true,Session.SESSION_TRANSACTED);<br>       5.创建消息队列：Queue queue = session.createQueue(name);<br>       6.创建或者获取生产者：MessageProducer produer = session.createProducer(queue);<br>       7.生成者发送消息：producer.send();<br>       8.提交会话事务：session.commit();<br>      消费者工作流程:<br>          1.创建连接工厂：ConnectionFactory factory = new ActiveMQConnectionFactory(userName,password,url)<br>          2.创建连接：Connection conn= factory.createConnection();<br>          3.开始连接：conn.start()<br>          4.创建会话并设置会话级别：Session session = conn.createSession(true,Session.SESSION_TRANSACTED);<br>          5.创建消息队列：Queue queue = session.createQueue(name);<br>          6.创建或者获取生产者：MessageProducer produer = session.createProducer(queue);<br>          7.生成者发送消息：producer.send();<br>          8.提交会话事务：session.commit();</p>
+<p>  2.消息存储方式<br>     1.KahaDB存储(默认方式)<br>         KahaDB的存储原理：<br>           在data/kahadb这个目录下，会生成四个文件：<br>               Ø db.data 它是消息的索引文件，本质上是B-Tree（B树），使用B-Tree作为索引指向db-.log里面存储的消息<br>               Ø db.redo 用来进行消息恢复<br>               Ø db-.log 存储消息内容。新的数据以APPEND的方式追加到日志文件末尾。属于顺序写入，因此消息存储是比较快的。默认是32M，达到阀值会自动递增<br>               Ø lock文件 锁，表示当前获得kahadb读写权限的broker<br>     2.JDBC存储<br>     3.内存<br>  3. 支持同步、异步两种发送模式将消息发送到broker上，<br>         同步会要求broker给一个响应，因为是阻塞操作，会影响到客户端<br>         异步发送者不需要等待broker提供反馈，所以性能相对较高。但是可能会出现消息丢失的情况。</p>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>面试</tag>
+        <tag>分布式</tag>
+        <tag>消息队列</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>分布式事务</title>
+    <url>/2020/04/18/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/</url>
+    <content><![CDATA[<p>1.分布式事务<br>  2PC<br>    第一阶段是预提交<br>       要求所有参与者提交事务<br>       反馈提交结果<br>    第二阶段要求事务提交或者回滚<br>    如果全是OK，就提交事务<br>    有一个不OK就回滚<br>    <a id="more"></a><br>  3PC<br>     第一阶段询问参与者能否提交<br>     第二阶段所有参与者反馈能提交，就发出提交事务请求<br>     第三阶段 反馈提交结果，完成事务提交<br>   XA协议比较简单，但是有单点问题，由于阻塞所以不能很好的支持并发，很依赖事务管理器<br>    TCC<br>    Try阶段：尝试执行,完成所有业务检查（一致性）,预留必须业务资源（准隔离性）<br>    Confirm阶段：确认执行真正执行业务，不作任何业务检查，只使用Try阶段预留的业务资源，Confirm操作满足幂等性。要求具备幂等设计，Confirm失败后需要进行重试。<br>    Cancel阶段：取消执行，释放Try阶段预留的业务资源 Cancel操作满足幂等性Cancel阶段的异常和Confirm阶段异常处理方案基本上一致。</p>
+<p>2.CAP理论<br>Consistency(一致性), 数据一致更新，所有数据变动都是同步的<br>Availability(可用性):系统提供的服务对于用户的请求，总是能在“有限的时间”内“返回结果”<br>P (分区容错性)：服务在遇到任何网络分区故障时，仍然能提供一致性和可用性的服务</p>
+<p>3.BASE理论<br>　BASE是Basically Available(基本可用)，Soft state(软状态)，Eventually consistent(最终一致性)这三个短语的简写。<br>可以简单BASE理论是对CAP权衡后演化而来的结果<br>基本可用：分布式系统在出现不可预知的故障时，允许损失部分可用性(响应时间延长/部分非核心功能不可用，有点降级的意思)<br>软状态：允许数据存在中间状态，并且认为该中间状态的存在不会影响系统的整体可用性<br>最终一致性：系统中所有副本的数据，在经过一段时间后，最终能达到一致</p>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>面试</tag>
+        <tag>分布式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux和网络</title>
+    <url>/2020/04/18/Linux%E5%92%8C%E7%BD%91%E7%BB%9C/</url>
+    <content><![CDATA[<p><strong>TCP与HTTP</strong></p>
+<ol>
+<li><p>HTTPS的加密方式是什么，讲讲整个加密解密流程。<br> 1.客户端（通常是浏览器）先向服务器发出加密通信的请求，发送协议版本，客户端生成随机数，加密方法等等<br> 2.服务端收到请求后回应，内容包含协议版本、服务端生成的随机数、加密方式、服务器证书<br> 3.客户端收到服务器回应以后，首先验证服务器证书。如果证书不是可信机构颁布、或者证书中的域名与实际域名不一致、或者证书已经过期，就会向访问者显示一个警告，由其选择是否还要继续通信。<br>  如果证书没有问题，客户端就会从证书中取出服务器的公钥。然后，向服务器发送下面三项信息。<br>   (1) 一个随机数。该随机数用服务器公钥加密，防止被窃听。<br>   (2) 编码改变通知，表示随后的信息都将用双方商定的加密方法和密钥发送。<br>   (3) 客户端握手结束通知，表示客户端的握手阶段已经结束。这一项同时也是前面发送的所有内容的hash值，用来供服务器校验。<br> 4.服务器收到客户端的第三个随机数pre-master key之后，计算生成本次会话所用的”会话密钥”。然后，向客户端最后发送下面信息。<br>   (1)编码改变通知，表示随后的信息都将用双方商定的加密方法和密钥发送。<br>   (2)服务器握手结束通知，表示服务器的握手阶段已经结束。这一项同时也是前面发送的所有内容的hash值，用来供客户端校验。</p>
+   <a id="more"></a></li>
+<li><p>http1.0和http1.1有什么区别。</p>
+</li>
+<li><p>TCP三次握手和四次挥手的流程，为什么断开连接要4次,如果握手只有两次，会出现什么。<br> 三次握手</p>
+<pre><code>1.客户端将SYN位置设为1，随机产生一个值，并将数据包发给服务端，服务端进入等待状态
+2.服务端向服务端发送请求，并进入等待接受状态
+3.客户端回应客户端收到请求，然后开始通信</code></pre><p> 四次挥手</p>
+<pre><code>因为TCP/IP协议是全双工通信
+ 1.第一次挥手：Client发送一个FIN，用来关闭Client到Server的数据传送，Client进入FIN_WAIT_1状态。
+ 2.第二次挥手：Server收到FIN后，发送一个ACK给Client，确认序号为收到序号+1（与SYN相同，一个FIN占用一个序号），Server进入CLOSE_WAIT状态。
+ 3.第三次挥手：Server发送一个FIN，用来关闭Server到Client的数据传送，Server进入LAST_ACK状态。
+ 4.第四次挥手：Client收到FIN后，Client进入TIME_WAIT状态，接着发送一个ACK给Server，确认序号为收到序号+1，Server进入CLOSED状态，完成四次挥手。</code></pre></li>
+<li><p>TIME_WAIT和CLOSE_WAIT的区别。<br>  CLOSE_WAIT是服务端<br>  TIME_WAIT是客户端</p>
+</li>
+<li><p>说说你知道的几种HTTP响应码，比如200, 302, 404。</p>
+</li>
+<li><p>当你用浏览器打开一个链接（如：<a href="http://www.javastack.cn/" target="_blank" rel="noopener">http://www.javastack.cn</a>）的时候，计算机做了哪些工作步骤。<br>   1.DNS解析<br>   2.TCP连接<br>   3.发送HTTP请求<br>   4.服务器处理请求并返回HTTP报文<br>   5.浏览器解析渲染页面<br>   6.连接结束</p>
+</li>
+<li><p>TCP/IP如何保证可靠性，说说TCP头的结构。</p>
+</li>
+<li><p>如何避免浏览器缓存。</p>
+</li>
+<li><p>如何理解HTTP协议的无状态性。<br> 无状态是指协议对于事务处理没有记忆能力，服务端不知道客户端什么状态</p>
+</li>
+<li><p>简述Http请求get和post的区别以及数据包格式。</p>
+</li>
+<li><p>HTTP有哪些method</p>
+</li>
+<li><p>简述HTTP请求的报文格式。</p>
+</li>
+<li><p>HTTP的长连接是什么意思。<br> 长连接就是客户端和服务端的TCP连接不会关闭</p>
+</li>
+<li><p>Http和https的三次握手有什么区别。</p>
+</li>
+</ol>
+<p>http状态码：200成功，303重定向 304   没有找到方法    403Forbidden 404 未找到页面 500 系统异常    502Bad Gateway  503  服务不可用</p>
+<ol start="15">
+<li>什么是分块传送。</li>
+<li>Session和cookie的区别。<br> 1.存取方式的不同  <pre><code>Cookie中只能保管ASCII字符串，
+Session中能够存取任何类型的数据</code></pre> 2.隐私策略的不同<pre><code>Cookie存储在客户端阅读器中，对客户端是可见的，
+Session存储在服务器上，对客户端是透明的，不存在敏感信息泄露的风险。</code></pre>3.服务器压力的不同<br>   Session存储在服务器上，请求量大会比较耗费内存<br>   Cookie保管在客户端，不占用服务器资源。<br>4.跨域支持上的不同<br>   Cookie支持跨域名访问<br>   Session仅在他所在的域名内有效。</li>
+<li>v                          </li>
+</ol>
+<p>19.应用层—表示层—-会话层—–传输层—–网络层——数据链路层——-物理层</p>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>面试</tag>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>开源框架</title>
+    <url>/2020/04/18/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/</url>
+    <content><![CDATA[<p>1.Spring 核心模块</p>
+<p>core 提供依赖注入和Bean管理功能，主要组件是 BeanFactory，<br>ORM Spring支持多种ORM框架，简化了数据库操作。<br>web 建立于Context模块之上，提供了一个适合于Web应用的上下文,同时还提供和其他web服务的支持<br>Context 扩展了BeanFactory的概念，增加了对国际化、事件传播，<br>AOP 为Spring容器管理的对象提供了对面向切面编程的支持；<br>DAO 该层封装了对数据库的访问，并且处理了其抛出的错误消息，同时还基于AOP模块提供了事务管理；<br>MVC：是一个全功能的构建 Web 应用程序的 MVC 实现，容纳了大量视图技术，如 JSP、Velocity、POI等；</p>
+<a id="more"></a>
+<p>2.Spring IOC<br>  控制反转，是一种设计思想，Ioc意味着将你设计好的对象交给容器控制，而不是传统的在你的对象内部直接控制。<br>    1.调用refresh()方法开始<br>    2.Rosource资源定位  resourceLoader<br>    3.资源载入 将指定用户的Bean表示成BeanDefiontione<br>    4.注册  将bean注册到一个map容器中</p>
+<p>3.Bean的生命周期:<br>1.实例化bean<br>2.设置依赖注入<br>3.注入Auto接口<br>4.初始化Bean<br>5.使用<br>6.卸载<br><a href="https://www.zhihu.com/question/38597960" target="_blank" rel="noopener">https://www.zhihu.com/question/38597960</a></p>
+<p>加载第三方的Bean @Configuration  +@Bean</p>
+<p>spring事务传播属性:</p>
+<p>Propagation.REQUIRED（required）：支持当前事务，如果当前有事务， 那么加入事务， 如果当前没有事务则新建一个(默认情况)<br>Propagation.NOT_SUPPORTED（not_supported) ： 以非事务方式执行操作，如果当前存在事务就把当前事务挂起，执行完后恢复事务（忽略当前事务）；<br>Propagation.SUPPORTS (supports) ：如果当前有事务则加入，如果没有则不用事务。<br>Propagation.MANDATORY (mandatory) ：支持当前事务，如果当前没有事务，则抛出异常。（当前必须有事务）<br>PROPAGATION_NEVER (never) ：以非事务方式执行，如果当前存在事务，则抛出异常。（当前必须不能有事务）<br>Propagation.REQUIRES_NEW (requires_new) ：支持当前事务，如果当前有事务，则挂起当前事务，然后新创建一个事务，如果当前没有事务，则自己创建一个事务。<br>Propagation.NESTED (nested 嵌套事务) ：如果当前存在事务，则嵌套在当前事务中。如果当前没有事务，则新建一个事务自己执行（和required一样）。嵌套的事务使用保存点作为回滚点，当内部事务回滚时不会影响外部事物的提交；但是外部回滚会把内部事务一起回滚回去。（这个和新建一个事务的区别）<br> 当前事务？</p>
+<p>3.Spring AOP<br>   面向切面编程<br>    连接点：能够被拦截的地方<br>    切点：每个方法都可以称之为连接点，我们具体定位到某一个方法就成为切点。<br>    通知:前置、后置、返回、异常、环绕</p>
+<p>  AOP使用:权限、日志、缓存<br>3.AOP实现方式三种：1.JDK动态代理 2.Cglib字节码 3.Aspet增强<br>  JDK动态代理和Cglib字节码区别<br>     动态代理<br>       1.通过实现 InvocationHandler 接口创建自己的调用处理器<br>       2.通过为 Proxy 类指定 ClassLoader 对象和一组 interface 来创建动态代理类<br>       3.通过反射机制获得动态代理类的构造函数<br>       4.通过构造方法将自定义的处理类当参数放入。<br>       5.通过构造函数创建动态代理类实例，构造时调用处理器对象作为参数被传入<br>     Cglib<br>      1.通过asm字节码生成框架生成代理类Class的二进制字节码<br>      2.通过Class.forName加载二进制字节码，生成Class对象<br>      3.通过反射机制获取实例构造，并初始化代理类对象<br>    1.动态代理需要实现接口，cglib需要继承<br>    2.动态代理通过类加载和反射来生成代理类,cglib是基于字节码来生成</p>
+<p>4.依赖注入方式<br>    setget注入<br>    构造器注入<br>    注解注入<br>    接口注入 有侵入性<br>5.相关注解<br>@Autowired默认按类型装配 假如有相同的Bean，再按名称匹配<br>@Qualifier名称装配<br>@Resource 是JDK1.6支持的注解，默认按照名称进行装配<br>6.Spring的事物传播属性<br>  七中事务传播机制 REQUIRED, REQUIRES_NEW等等</p>
+<p>5.SpringMvc 原理<br>    (1) Http请求：客户端请求提交到DispatcherServlet。<br>    (2) 寻找处理器：由DispatcherServlet控制器查询一个或多个HandlerMapping，找到处理请求的Controller。<br>    (3) 调用处理器：DispatcherServlet将请求提交到Controller。<br>    (4)(5)调用业务处理和返回结果：Controller调用业务逻辑处理后，返回ModelAndView。<br>    (6)(7)处理视图映射并返回模型： DispatcherServlet查询一个或多个ViewResoler视图解析器，找到ModelAndView指定的视图。<br>    (8) Http响应：视图负责将结果显示到客户端。</p>
+<p>6.Servlet 干了什么<br>   DispatcherServlet  继承  FrameworkServlet  继承 HttpServletBean  并且它也继承自 HttpServlet<br>   HttpServletBean 主要做一些初始化的工作，将web.xml中配置的参数设置到Servlet中。比如servlet标签的子标签init-param标签中配置的参数。<br>   FrameworkServlet   初始化webApplicationContext，建立springMVC 上下文，并于父类spring上下文关联<br>   DispatcherServlet  初始化各个功能的实现类。比如异常处理、视图处理、请求映射处理等。<br>7.Mybaties 原理<br>   1.通过configuration解析config.xml配置文件和mapper.xml映射文件，映射文件可以使用xml方式或者注解方式<br>   2.然后由configuration获得sqlsessionfactory对象，再由sqlsessionfactory获得sqlsession数据库访问会话对象，<br>   3.通过JDK动态代理生成Mapper文件的代理类<br>8.Mybaties 二级缓存和更新策略<br>    一级缓存是SqlSession级别的，如果同一个SqlSession中使用了相同的SQL，只有第一次会查询数据库，假如有了DML语句，将会一级缓存<br>    二级缓存是跨SqlSession，不同的SqlSession两次执行相同的namespace下的sql语句，<br>    LRU默认<br>    FIFO<br>    软引用<br>    弱引用<br>    #{}是经过预编译的,是安全的。<br>    而${}是未经过预编译的,仅仅是取变量的值,是非安全的,存在SQL注入。</p>
+<p>9.Dubbo的原理，<br>   1.消费方调用本地服务<br>   2.本地服务将参数方法等信息组装成网络传输的消息体<br>   3.本地服务找到服务地址，并将消息发给服务端<br>   4.服务端本地服务收到消息后进行解码<br>   5.服务端本地服务调用本地服务，本地服务做业务处理，然后再把结果转给服务端<br>   6.服务端就结果打包成网络传输的消息体<br>   7.客户端收到消息进行转码然后给消费方<br>10.数据怎么流转的，怎么实现集群，负载均衡，服务注册，和发现，重试转发，快速失败的策略是怎样的</p>
+<ol>
+<li><p>dubbo服务治理、服务降级以及重试<br>1.调用链路自动生成<br>2.服务访问压力以及时长统计 主要看全链路，TP50/TP90/TP99<br>3.服务分层、调用链路失败监控报警、服务监控<br>2.服务降级<br>假如两个服务调用多次失败，就走降级备用逻辑给用户响应/<br>3.服务重试00<br>①失败重试<br>consumer调用provider失败了，比如provider出现了异常，这时候就要进行重试。<br>②服务超时<br>设置超时时间<br>重试：6次，超时：200ms</p>
+<p>dubbo提供了负载均衡:1.Random 2.随机，按权重设置随机概率。 3. 轮循，按公约后的权重设置轮循比率。4.最少活跃 5.一致性hash<br>快速失败策略：</p>
+</li>
+</ol>
+<p>   //添加事务注解<br>    //1.使用 propagation 指定事务的传播行为, 即当前的事务方法被另外一个事务方法调用时<br>    //如何使用事务, 默认取值为 REQUIRED, 即使用调用方法的事务<br>    //REQUIRES_NEW: 事务自己的事务, 调用的事务方法的事务被挂起.<br>    //2.使用 isolation 指定事务的隔离级别, 最常用的取值为 READ_COMMITTED<br>    //3.默认情况下 Spring 的声明式事务对所有的运行时异常进行回滚. 也可以通过对应的<br>    //属性进行设置. 通常情况下去默认值即可.<br>    //4.使用 readOnly 指定事务是否为只读. 表示这个事务只读取数据但不更新数据,<br>    //这样可以帮助数据库引擎优化事务. 若真的事一个只读取数据库值的方法, 应设置 readOnly=true<br>    //5.使用 timeout 指定强制回滚之前事务可以占用的时间.<br>    @Transactional(propagation=Propagation.REQUIRES_NEW,<br>            isolation=Isolation.READ_COMMITTED,<br>            noRollbackFor={UserAccountException.class},<br>            rollbackFor = IOException.class,<br>            readOnly=false,<br>            timeout=3)   传播属性、隔离级别、是否只读、超时时间<br>    @Override<br>    public void purchase(String username, String isbn) {}<br>11.zk原理<br>12.什么是paxos算法， 什么是zab协议。<br>    zab协议采用的paxos算法， leader节点失效，迅速从从节点中重新选出一个替代者<br>   Paxos算法的目标就是让他们按照少数服从多数的方式，最终达成一致意见。</p>
+<p>13.Zookeeper watch机制原理。</p>
+<p>14.ngnix原理<br>   ngnix反向代理和负载均衡<br>    轮询<br>    加权轮询<br>    源地址哈希法<br>    随机<br>    最小连接数法<br>15.ngnix限流<br>  limit_req_zone：通过“漏桶”算法限制每个 IP 发起的请求频率。<br>limit_conn_zone：限制每个 IP 发起的连接数。<br>正向和反向代理</p>
+<p>16.简单讲讲tomcat结构，以及其类加载器流程，线程模型等。<br>    tomcat就是一个server ，一个server对应多个service，一个service对应对应多个Connector 和 Container，其中Connector 主要负责对外交流，Container 主要处理 Connector 接受的请求<br>17.tomcat如何调优，涉及哪些参数<br>   1.提高JVM栈内存Increase JVM heap memory<br>      Xms – 指定初始化时化的栈内存<br>     -Xms – 指定初始化时化的栈内存<br>      -Xmx – 指定最大栈内存<br>    2. – 线程池设置<br>       maxThreads<br>常用限流方法；<br>   1.计数器法<br>       一分钟只能有100个请求<br>         缺点：没法处理临界值问题<br>   1.漏桶算法<br>       消费速率一定，但进量会受到限制，座椅用过流程整形<br>   2.令牌桶算法<br>      往桶里添加令牌，请求来了，从桶里申请令牌，如果有，则去消费，没有就排队或者丢弃请求</p>
+<p>降级：技术降级、服务开关</p>
+<p>过滤器和拦截器的区别：</p>
+<pre><code>  1、拦截器是基于java的反射机制的，而过滤器是基于函数回调 
+  2、拦截器不依赖与servlet容器，过滤器依赖与servlet容器
+  3、拦截器只能对action请求起作用，而过滤器则可以对几乎所有的请求起作用 
+  4、拦截器可以多次被调用，而过滤器只能在容器初始化时被调用一次 
+拦截器 ：是在面向切面编程的就是在你的service或者一个方法，前调用一个方法，或者在方法后调用一个方法比如动态代理就是拦截器的简单实现，在你调用方法前打印出字符串（或者做其它业务逻辑的操作），也可以在你调用方法后打印出字符串，甚至在你抛出异常的时候做业务逻辑的操作。
+
+ web.xml 的加载顺序是：</code></pre><p>context-param -&gt; listener -&gt; filter -&gt; servlet ，而同个类型之间的实际程序调用的时候的顺序是根据对应的 mapping 的顺序进行调用的。</p>
+<p>netty 相关<br>   1.Netty 的线程模型<br>      1、Reactor单线程模型<br>           1.作为 NIO 服务端，接收客户端的 TCP 连接；<br>           2.作为 NIO 客户端，向服务端发起 TCP 连接；<br>           3.读取通信对端的请求或者应答消息；<br>           4.向通信对端发送消息请求或者应答消息。<br>      2、Reactor多线程模型<br>            1.有专门一个 NIO 线程 Acceptor 线程用于监听服务端，接收客户端的 TCP 连接请求；<br>            2.网络 IO 操作 - 读、写等由一个 NIO 线程池负责，线程池可以采用标准的 JDK 线程池实现，它包含一个任务队列和 N 个可用的线程，由这些 NIO   线程负责消息的读取、解码、编码和发送；<br>            4.1个 NIO 线程可以同时处理 N 条链路，但是 1 个链路只对应 1 个 NIO 线程，防止发生并发操作问题。</p>
+<pre><code>  3、主从多线程模型
+
+        Netty 通过 Reactor 模型基于多路复用器接收并处理用户请求，内部实现了两个线程池，boss 线程池和 work 线程池，其中 boss 线程池的线程负责处理请求的 accept 事件，当接收到 accept 事件的请求时，把对应的 socket 封装到一个 NioSocketChannel 中，并交给 work线程池，其中 work 线程池负责请求的 read 和 write 事件，由对应的 Handler 处理。   
+2.TCP 粘包/拆包的原因及解决方法
+   因为是走TCP/IP 协议，一个完整的包会被拆成多个包发送，
+    粘包和半包
+    粘包就是数据包多了一截，半包就是少了一部分
+解决办法：
+  1.消息定长
+  2.包尾增加结束标识
+3.Netty空转问题
+   定义一个当前时间currentTimeNanos，接着计算出一个执行最少需要的时间timeoutMillis。每次对selectCnt做++操作。
+  若在某个周期内连续发生N次空轮询，则触发了epoll死循环bug，就重建Selector   默认512
+4.</code></pre>]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>面试</tag>
+        <tag>框架</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>分布式缓存</title>
+    <url>/2020/04/18/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/</url>
+    <content><![CDATA[<p><strong>缓存</strong><br>1.Redis的数据结构都有哪些。<br>  String  hash  list  set soreSet<br>2.如何防止缓存穿透、雪崩和击穿。<br>  缓存穿透:1.布隆过滤器(存在误杀) 2.存储空null，但存活时间很短5分钟<br>  缓存雪崩:1.将失效过期时间随机性分布<br>  缓存击穿:采用互斥锁或者分布式锁来处理<br>  穿透和击穿的区别在于:穿透对于大量key，而击穿针对的是单key<br>  <a id="more"></a><br>3.缓存数据过期后的更新如何设计。<br>  1.请求来的时候，先读缓存，保存一个空key，然后再去读数据库，如果数据库有，再写回到缓存上<br>4.如何做到缓存(比如redis)与DB里的数据一致性，你们项目中用到了什么缓存系统，如何设计的。<br>   1.数据先落库，再删除缓存<br>   2.请求来的时候，先读缓存，如果缓存没有，然后再去读数据库，如果数据库有，再写回到缓存上<br>   但是需要注意的是，缓存的穿透和、雪崩、击穿等问题<br>5.Redis的使用要注意什么，内存设置<br>   1.注意建表规范<br>   2.存储数据，设计k-v时候注意可读性，避免大value等<br>   内存设置：<br>     1.通过info命令来查看<br>     2.最好设置max memory 不要超过机器最大内存<br>7.当前redis集群有哪些玩法，各自优缺点，场景。<br>   1.官方的cluser方案；<br>       提出了槽(slot)的概念，16384个，对于Redis的键值对进行散列，分配到这些槽中的一个，然后用节点对应着每一个槽，官方推荐将节点配置成主从，假如主节点失效，通过选举算法会从salve中选出来一个，完全去中心化，配置比较简单，但是出来较晚，使用者不是很多<br>   2.codis；</p>
+<p>   3.哨兵；</p>
+<p>8.Redis的并发竞争问题如何解决，了解Redis事务的CAS操作吗。<br>   key 并发写的问题，<br>   1.可以使用乐观锁来处理<br>   2.使用分布式锁来处理<br>9.Redis的选举算法和流程是怎样的。<br>      Raft协议，通过心跳和选举算法实现哨兵， 主观失效和客观失效，<br>10.redis的持久化的机制，aof和rdb的区别。<br>    RDB 就是在不同的时间点，将redis存储的数据生成快照并存储到磁盘等介质上；<br>       通过bgSave命令触发，从主进程fork()一个子进程来，生成父进程内存中数据快照，然后再替换原文件，  fork会阻塞父进程<br>       优点:1.二进制文件，适合全量备份<br>            2.执行速度比AOF要快<br>        缺点：<br>            1.新老版本的RDB文件不一定兼容<br>            ２.没法做到秒级<br>            ３.fork属于重量操作，不能轻易操作<br>    AOF  持久化记录服务器执行的所有写操作命令<br>        1.将写命令写道缓冲区<br>        2.AOF缓冲区将根据相关策略向磁盘上同步<br>        3.因为AOF文件会越变越大，需要定时对AOF文件重写，达到压缩的目的<br>11.redis的集群怎么同步的数据的。</p>
+<p>12.知道哪些redis的优化操作。<br>    1.让键名保持简短,可读性更强<br>    2.对key最好都带上过期时间<br>    3.避免超大容量key<br>13.Reids的主从复制机制原理。<br>    分为两种复制:<br>    从节点使用psync()来实现同步<br>       1.全量同步<br>           1.主服务器收到同步请求，执行bgsave命令，同时使用缓冲区暂存命令<br>           2.bgsave完成后将rdb文件发送给从服务器，从服务器收到RDB文件后，将数据保存到磁盘，然后加载到内存中<br>           3.然后主服务器再将缓冲区的命令发给从服务器，从服务器执行这些命令<br>        2.部分同步  主要用于节点丢失，做数据补发<br>            主从节点分别保存着一个数据偏移量，来验证数据的一致性<br>            从节点把自身偏移量发给主节点，主节点根据偏移量把挤压缓冲区中数据发送给从节点<br>14.Redis的线程模型是什么。<br>    多路复用IO<br>15.Redis的淘汰策略<br>    volatile-lru： 只对设置了过期时间的key进行LRU（默认值）<br>    noeviction ： 永不过期，返回错误</p>
+<pre><code>volatile-random：过期key随机删除
+ volatile-ttl ： 删除即将过期的
+
+  allkeys-random： 全量Key中随机删除
+  allkeys-lru ：   全量Key进行LRU</code></pre><p>16.热点Key问题<br>    1.使用互斥锁来实现，只允许一个线程构建缓存<br>    2.key”永久”存储<br>    3.对热点问题先一步业务分析，可以将数据分布到集群中<br>17.Redis 高效问题<br>     1.绝大部分请求是纯粹的内存操作（非常快速）<br>     2.采用单线程,避免了不必要的上下文切换和竞争条件<br>     3.非阻塞IO<br>15.Memcache的原理，哪些数据适合放在缓存中。</p>
+<p>16.redis和memcached 的内存管理的区别。<br>17.简述本地缓存和分布式缓存和优缺点。<br>   本地缓存<br>    优点：性能高，没有网络消耗<br>    缺点：没有持久化机制，难保持数据一致性，存储数量小，受GC影响<br>   分布式缓存：<br>   优点：数据集中，易于维护数据一致性，中间件可以实现对内存的统一管理，便于水平扩容<br>   缺点: 有网络以及序列化和反序列化消耗，一般以来中间件来处理</p>
+<p>18.本地缓存在并发使用时的注意事项。</p>
+<p>19.Ehcache原理 有几种<br>   1 FIFO，先进先出<br>   2 LFU，最少被使用，缓存的元素有一个hit属性，hit值最小的将会被清出缓存。<br>   3 LRU，最近最少使用的，缓存的元素有一个时间戳，当缓存容量满了，而又需要腾出地方来缓存新的元素的时候，</p>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>面试</tag>
+        <tag>分布式</tag>
+        <tag>缓存</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>设计模式</title>
+    <url>/2020/04/18/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</url>
+    <content><![CDATA[<p>1.设计模式六大原则<br>  1.单一原则<br>  2.里氏代换<br>  3.依赖倒置<br>  4.接口隔离<br>  5.迪米特法则<br>  6.合成复用</p>
+<a id="more"></a>
+<p>常用设计模式<br>  1.单例模式<br>     线程池，连接池<br>  2.工厂模式<br>  3.简单工厂模式<br>  4.抽象工厂模式<br>  5.建造者模式<br>  6.代理模式<br>     静态代理<br>     动态代理<br>       1.通过实现 InvocationHandler 接口创建自己的调用处理器<br>       2.通过为 Proxy 类指定 ClassLoader 对象和一组 interface 来创建动态代理类<br>       3.通过反射机制获得动态代理类的构造函数<br>       4.通过构造方法将自定义的处理类当参数放入。<br>       5.通过构造函数创建动态代理类实例，构造时调用处理器对象作为参数被传入<br>     Cglib<br>      1.通过asm字节码生成框架生成代理类Class的二进制字节码<br>      2.通过Class.forName加载二进制字节码，生成Class对象<br>      3.通过反射机制获取实例构造，并初始化代理类对象<br>    1.动态代理需要实现接口，cglib需要继承<br>    2.动态代理通过类加载和反射来生成代理类,cglib是基于字节码来生成</p>
+<p>  7.适配器模式<br>     原类和适配器类转换(电脑接口)<br>  8.模板方法模式<br>     JdbcTemplet？<br>  9.观察者模式<br>      存在一对多关系(发布订阅)<br>  10.策略模式<br>       针对不同行为提供不同的实现(不同的算法)<br>  11.装饰模式<br>      不改变其结构，给其增加功能(橡皮鸭加飞机引擎)</p>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>面试</tag>
+        <tag>设计模式</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>数据库</title>
     <url>/2020/04/18/%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
     <content><![CDATA[<p>1.Mysql索引类型<br>  1.1 按类型分<br>       Hash索引  只支持精确查找，不支持范围查找，不支持排序  下·<br>       空间索引 只有MyISAM引擎支持，并且支持的<br>       全文索引 主要用来查找文本中的关键字，而不是直接与索引中的值相比较。<br>       Btree索引<br>   1.2 聚集索引和非聚集索引<br>   聚簇索引:聚簇索引是指索引的结构和排列规则是和实际数据的存储结构和排列规则是一样的，一张表只能有一个，<br>   非聚簇索引:也就二级索引 非主键索引的叶子节点内容是主键的值。</p>
@@ -470,22 +486,6 @@ LinkedBlockingQueue的容量是没有上限的（说的不准确，在不指定�
       </categories>
       <tags>
         <tag>面试</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>设计模式</title>
-    <url>/2020/04/18/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</url>
-    <content><![CDATA[<p>1.设计模式六大原则<br>  1.单一原则<br>  2.里氏代换<br>  3.依赖倒置<br>  4.接口隔离<br>  5.迪米特法则<br>  6.合成复用</p>
-<a id="more"></a>
-<p>常用设计模式<br>  1.单例模式<br>     线程池，连接池<br>  2.工厂模式<br>  3.简单工厂模式<br>  4.抽象工厂模式<br>  5.建造者模式<br>  6.代理模式<br>     静态代理<br>     动态代理<br>       1.通过实现 InvocationHandler 接口创建自己的调用处理器<br>       2.通过为 Proxy 类指定 ClassLoader 对象和一组 interface 来创建动态代理类<br>       3.通过反射机制获得动态代理类的构造函数<br>       4.通过构造方法将自定义的处理类当参数放入。<br>       5.通过构造函数创建动态代理类实例，构造时调用处理器对象作为参数被传入<br>     Cglib<br>      1.通过asm字节码生成框架生成代理类Class的二进制字节码<br>      2.通过Class.forName加载二进制字节码，生成Class对象<br>      3.通过反射机制获取实例构造，并初始化代理类对象<br>    1.动态代理需要实现接口，cglib需要继承<br>    2.动态代理通过类加载和反射来生成代理类,cglib是基于字节码来生成</p>
-<p>  7.适配器模式<br>     原类和适配器类转换(电脑接口)<br>  8.模板方法模式<br>     JdbcTemplet？<br>  9.观察者模式<br>      存在一对多关系(发布订阅)<br>  10.策略模式<br>       针对不同行为提供不同的实现(不同的算法)<br>  11.装饰模式<br>      不改变其结构，给其增加功能(橡皮鸭加飞机引擎)</p>
-]]></content>
-      <categories>
-        <category>技术</category>
-      </categories>
-      <tags>
-        <tag>面试</tag>
-        <tag>设计模式</tag>
       </tags>
   </entry>
 </search>
