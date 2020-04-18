@@ -75,7 +75,7 @@
 
 
 
-  <meta name="keywords" content="面试,分布式,缓存," />
+  <meta name="keywords" content="面试,缓存,分布式," />
 
 
 
@@ -96,8 +96,8 @@
 <meta property="article:modified_time" content="2020-04-17T16:33:35.574Z">
 <meta property="article:author" content="章小凡">
 <meta property="article:tag" content="面试">
-<meta property="article:tag" content="分布式">
 <meta property="article:tag" content="缓存">
+<meta property="article:tag" content="分布式">
 <meta name="twitter:card" content="summary">
 
 
@@ -370,6 +370,16 @@
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/04/18/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/04/18/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -438,9 +448,9 @@
           
             <a href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag"><i class="fa fa-tag"></i> 面试</a>
           
-            <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag"><i class="fa fa-tag"></i> 分布式</a>
-          
             <a href="/tags/%E7%BC%93%E5%AD%98/" rel="tag"><i class="fa fa-tag"></i> 缓存</a>
+          
+            <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag"><i class="fa fa-tag"></i> 分布式</a>
           
         </div>
       
@@ -491,6 +501,9 @@
           
 
   
+    <div class="comments" id="comments">
+    </div>
+  
 
 
 
@@ -530,9 +543,7 @@
 
             
               <div class="site-state-item site-state-posts">
-              
-                <a href="/archives/%7C%7C%20archive">
-              
+                <a href="/archives">
                   <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
@@ -826,6 +837,28 @@
 
 
 
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'uUX6L5d0Y8szMXVVh5uxIruw-gzGzoHsz',
+        appKey: 'kpueubEKOFztxRqlWc6Swb5F',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 

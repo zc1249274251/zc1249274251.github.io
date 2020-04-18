@@ -1,6 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Linux和网络</title>
+    <url>/2020/04/18/Linux%E5%92%8C%E7%BD%91%E7%BB%9C/</url>
+    <content><![CDATA[<p><strong>TCP与HTTP</strong></p>
+<ol>
+<li><p>HTTPS的加密方式是什么，讲讲整个加密解密流程。<br> 1.客户端（通常是浏览器）先向服务器发出加密通信的请求，发送协议版本，客户端生成随机数，加密方法等等<br> 2.服务端收到请求后回应，内容包含协议版本、服务端生成的随机数、加密方式、服务器证书<br> 3.客户端收到服务器回应以后，首先验证服务器证书。如果证书不是可信机构颁布、或者证书中的域名与实际域名不一致、或者证书已经过期，就会向访问者显示一个警告，由其选择是否还要继续通信。<br>  如果证书没有问题，客户端就会从证书中取出服务器的公钥。然后，向服务器发送下面三项信息。<br>   (1) 一个随机数。该随机数用服务器公钥加密，防止被窃听。<br>   (2) 编码改变通知，表示随后的信息都将用双方商定的加密方法和密钥发送。<br>   (3) 客户端握手结束通知，表示客户端的握手阶段已经结束。这一项同时也是前面发送的所有内容的hash值，用来供服务器校验。<br> 4.服务器收到客户端的第三个随机数pre-master key之后，计算生成本次会话所用的”会话密钥”。然后，向客户端最后发送下面信息。<br>   (1)编码改变通知，表示随后的信息都将用双方商定的加密方法和密钥发送。<br>   (2)服务器握手结束通知，表示服务器的握手阶段已经结束。这一项同时也是前面发送的所有内容的hash值，用来供客户端校验。</p>
+   <a id="more"></a></li>
+<li><p>http1.0和http1.1有什么区别。</p>
+</li>
+<li><p>TCP三次握手和四次挥手的流程，为什么断开连接要4次,如果握手只有两次，会出现什么。<br> 三次握手</p>
+<pre><code>1.客户端将SYN位置设为1，随机产生一个值，并将数据包发给服务端，服务端进入等待状态
+2.服务端向服务端发送请求，并进入等待接受状态
+3.客户端回应客户端收到请求，然后开始通信</code></pre><p> 四次挥手</p>
+<pre><code>因为TCP/IP协议是全双工通信
+ 1.第一次挥手：Client发送一个FIN，用来关闭Client到Server的数据传送，Client进入FIN_WAIT_1状态。
+ 2.第二次挥手：Server收到FIN后，发送一个ACK给Client，确认序号为收到序号+1（与SYN相同，一个FIN占用一个序号），Server进入CLOSE_WAIT状态。
+ 3.第三次挥手：Server发送一个FIN，用来关闭Server到Client的数据传送，Server进入LAST_ACK状态。
+ 4.第四次挥手：Client收到FIN后，Client进入TIME_WAIT状态，接着发送一个ACK给Server，确认序号为收到序号+1，Server进入CLOSED状态，完成四次挥手。</code></pre></li>
+<li><p>TIME_WAIT和CLOSE_WAIT的区别。<br>  CLOSE_WAIT是服务端<br>  TIME_WAIT是客户端</p>
+</li>
+<li><p>说说你知道的几种HTTP响应码，比如200, 302, 404。</p>
+</li>
+<li><p>当你用浏览器打开一个链接（如：<a href="http://www.javastack.cn/" target="_blank" rel="noopener">http://www.javastack.cn</a>）的时候，计算机做了哪些工作步骤。<br>   1.DNS解析<br>   2.TCP连接<br>   3.发送HTTP请求<br>   4.服务器处理请求并返回HTTP报文<br>   5.浏览器解析渲染页面<br>   6.连接结束</p>
+</li>
+<li><p>TCP/IP如何保证可靠性，说说TCP头的结构。</p>
+</li>
+<li><p>如何避免浏览器缓存。</p>
+</li>
+<li><p>如何理解HTTP协议的无状态性。<br> 无状态是指协议对于事务处理没有记忆能力，服务端不知道客户端什么状态</p>
+</li>
+<li><p>简述Http请求get和post的区别以及数据包格式。</p>
+</li>
+<li><p>HTTP有哪些method</p>
+</li>
+<li><p>简述HTTP请求的报文格式。</p>
+</li>
+<li><p>HTTP的长连接是什么意思。<br> 长连接就是客户端和服务端的TCP连接不会关闭</p>
+</li>
+<li><p>Http和https的三次握手有什么区别。</p>
+</li>
+</ol>
+<p>http状态码：200成功，303重定向 304   没有找到方法    403Forbidden 404 未找到页面 500 系统异常    502Bad Gateway  503  服务不可用</p>
+<ol start="15">
+<li>什么是分块传送。</li>
+<li>Session和cookie的区别。<br> 1.存取方式的不同  <pre><code>Cookie中只能保管ASCII字符串，
+Session中能够存取任何类型的数据</code></pre> 2.隐私策略的不同<pre><code>Cookie存储在客户端阅读器中，对客户端是可见的，
+Session存储在服务器上，对客户端是透明的，不存在敏感信息泄露的风险。</code></pre>3.服务器压力的不同<br>   Session存储在服务器上，请求量大会比较耗费内存<br>   Cookie保管在客户端，不占用服务器资源。<br>4.跨域支持上的不同<br>   Cookie支持跨域名访问<br>   Session仅在他所在的域名内有效。</li>
+<li>v                          </li>
+</ol>
+<p>19.应用层—表示层—-会话层—–传输层—–网络层——数据链路层——-物理层</p>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>面试</tag>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java基础</title>
     <url>/2020/04/18/Java%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<p>1.基础<br>  1.1数组为啥能[i]取值？<br>      数组（Array)是一种线性表数据结构。它用一组连续的内存空间，来存储一组具有相同类型的数据<br>  1.2 基本数据类型<br>      byte、short、int、double、long、float、boolean、char<br>  1.3.String的HashCode<br>      String 是char[]数组组成<br>      String 的 char 数组的数字每次乘以 31 再叠加最后返回   hashcode=char[i]* 31+hashcode;<br>      31 有个很好的性能,可以得到更好的性能  31 * i == (i &lt;&lt; 5） - i<br>  1.4 hashcode和equals实现？这么做有何优劣。<br>        equals和HashCode 都是object的方法，equals需要重写，假如没重写和==效果相同，<br>        1.重写了equals()没有重写HashCode()  会导致equals相等的两个对象，hashcode()不等<br>        2.重写了HashCode() 没有重写eauals（） 其实这个和== 效果相同  没有比较作用<br>  1.5 error和exception的区别，CheckedException，RuntimeException的区别。<br>     error和exception的均继承Throwable  Error（错误）是系统中的错误，程序是不能改变的和处理的 异常是程序可能出现的问题<br>     runtimeException不用显示try()catch() 空指针 数据越界 类型转换 IO异常 数据库异常</p>
@@ -184,27 +243,28 @@ LinkedBlockingQueue的容量是没有上限的（说的不准确，在不指定�
       </tags>
   </entry>
   <entry>
-    <title>分布式消息</title>
-    <url>/2020/04/18/%E5%88%86%E5%B8%83%E5%BC%8F%E6%B6%88%E6%81%AF/</url>
-    <content><![CDATA[<p><strong>消息队列</strong></p>
-<p>1.使用过哪些MQ？和其他mq比较有什么优缺点?<br>    activeMQ和RocketMQ<br>2.消息队列的使用场景<br>  1.异步化2.应用解耦<br>3.消息的重发,补充策略<br>    消息重发指的是borker发送给消费者，但消费者处理失败，borker会去重发消息,超过设定次数，lister消费者会给borker发送一个毒ACK消息，borker将该消息放入死信队列中<br>    默认是6次，<br>    重发时间间隔,默认为1s<br>    重投延时<br>  重发需要有幂等性考虑<br>  <a id="more"></a><br>4.如何保证消息的有序性<br>    在MQ中创建多条QUEUE,针对同一规则的数据放入相同队列，比如订单(下单，支付，)，把相同订单号的放入一个队列中，后端消费者消费就行了，<br>    这种可能会有消息重复问题<br>5.消息重复问题<br>    1.保证业务的幂等性(需要在消费段做)<br>    2.保证每条消息都有唯一编号且保证消息处理成功与去重表的日志同时出现</p>
-<p>5.MQ的连接是线程安全的吗，你们公司的MQ服务架构怎样的。</p>
-<p>6.MQ系统的数据如何保证不丢失<br>   消息丢失场景：<br>      1.生产者消息丢失<br>          1.消息确认模式，分配唯一的ID，只有队列写成功了，回传一个确认的ACK<br>          2.开启一个事务，没有被消费者消费，就事务回滚<br>      2.消息队列消息丢失<br>          1.数据持久化<br>          2.消费完成确认后再删除消息<br>      3.消费端消息丢失<br>          消息丢失，未收到确认的ACK，就重发一次，但是做幂等性处理</p>
-<p>7.MQ消息如何做到幂等<br>       1.消息队列分配无关业务、全局唯一的ID<br>       2.业务上自己做消息幂等性<br>8.MQ的消息延迟了怎么处理，</p>
-<p>9.利用mq怎么实现最终一致性<br>    1.保证消息不丢失<br>    2.保证消息能被消费正常处理<br>    3.由数据库来做最终的一致性保证</p>
-<p>10.如何保证消息队列是高可用的<br>   多种Master/slave模式的集群<br>    1.Shared Nothing Master/Slave  master收到消息同步完slave才响应ACK<br>    2.Shared Database Master/Slave master和slave数据共享，然后数据库的排他锁来竞争，谁拿到锁，谁是master<br>    3.Shared File system Master/Slave   共享文件锁<br>    4.Replicated LevelDB Store   利用zookeer来选举</p>
-<p>11.消息可以设置过期时间么，过期了你们一般怎么处理<br>    消息可以设置过期时间，一般过期后会被放入死信队列<br>    死信处理策略：<br>       1.不使用默认死信队列，不便于管理<br>       2.持久化消息不放入死信队列<br>       3.非持久化消息放入<br>       4.过期消息不保存到死信队列<br>       5.丢弃所有死信<br>       6.丢弃指定死信<br>       7.丢弃正则死信</p>
-<p>12.MQ消息积压问题<br>     一般MQ消息积压是因为消费者这边出了问题，所以思路是：<br>          1.先解决消费者的问题，让其能正常消费<br>          2.提升消费者的消费能力，紧急扩容<br>          3.假如队列满了，就粗暴一点，临时写程序来介入数据消费，写完就丢掉消息<br>15.MQ的技术选型<br>    ActiveMQ<br>      优点:Java开发，相对简单，功能比较完备<br>      缺点:社区不活跃<br>    RocketMQ<br>       优点:社区活跃，大公司里技术支持，功能完备，经得起考验<br>       缺点：<br>    RabbitMQ<br>        优点:<br>        缺点：erlang语言比较少，出问题了不好处理<br>JMS—–&gt;ActiveMq<br>AMQP—–&gt;RockerMQ</p>
-<p>1.JMS<br>  JMS是java的消息服务，JMS的客户端之间可以通过JMS服务进行异步的消息传输。<br>2.JMS消息模型<br>   点对点和发布订阅<br>3.MOM 就是面向消息中间件（Message-oriented middleware），是用于以分布式应用或系统中的异步、松耦合、可靠、可扩展和安全通信的一类软件。MOM 的总体思想是它作为消息发送器和消息接收器之间的消息中介,这种中介提供了一个全新水平的松耦合。<br>4.AMQP，即Advanced Message Queuing Protocol,一个提供统一消息服务的应用层标准高级消息队列协议，是应用层协议的一个开放标准,为面向消息的中间件设计<br>ActiveMq相关知识<br>  1.ActiveMq流程<br>     生产者工作流程:<br>       1.创建连接工厂：ConnectionFactory factory = new ActiveMQConnectionFactory(userName,password,url)<br>       2.创建连接：Connection conn= factory.createConnection();<br>       3.打开连接：conn.start()<br>       4.创建会话并设置会话级别：Session session = conn.createSession(true,Session.SESSION_TRANSACTED);<br>       5.创建消息队列：Queue queue = session.createQueue(name);<br>       6.创建或者获取生产者：MessageProducer produer = session.createProducer(queue);<br>       7.生成者发送消息：producer.send();<br>       8.提交会话事务：session.commit();<br>      消费者工作流程:<br>          1.创建连接工厂：ConnectionFactory factory = new ActiveMQConnectionFactory(userName,password,url)<br>          2.创建连接：Connection conn= factory.createConnection();<br>          3.开始连接：conn.start()<br>          4.创建会话并设置会话级别：Session session = conn.createSession(true,Session.SESSION_TRANSACTED);<br>          5.创建消息队列：Queue queue = session.createQueue(name);<br>          6.创建或者获取生产者：MessageProducer produer = session.createProducer(queue);<br>          7.生成者发送消息：producer.send();<br>          8.提交会话事务：session.commit();</p>
-<p>  2.消息存储方式<br>     1.KahaDB存储(默认方式)<br>         KahaDB的存储原理：<br>           在data/kahadb这个目录下，会生成四个文件：<br>               Ø db.data 它是消息的索引文件，本质上是B-Tree（B树），使用B-Tree作为索引指向db-.log里面存储的消息<br>               Ø db.redo 用来进行消息恢复<br>               Ø db-.log 存储消息内容。新的数据以APPEND的方式追加到日志文件末尾。属于顺序写入，因此消息存储是比较快的。默认是32M，达到阀值会自动递增<br>               Ø lock文件 锁，表示当前获得kahadb读写权限的broker<br>     2.JDBC存储<br>     3.内存<br>  3. 支持同步、异步两种发送模式将消息发送到broker上，<br>         同步会要求broker给一个响应，因为是阻塞操作，会影响到客户端<br>         异步发送者不需要等待broker提供反馈，所以性能相对较高。但是可能会出现消息丢失的情况。</p>
+    <title>分布式缓存</title>
+    <url>/2020/04/18/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/</url>
+    <content><![CDATA[<p><strong>缓存</strong><br>1.Redis的数据结构都有哪些。<br>  String  hash  list  set soreSet<br>2.如何防止缓存穿透、雪崩和击穿。<br>  缓存穿透:1.布隆过滤器(存在误杀) 2.存储空null，但存活时间很短5分钟<br>  缓存雪崩:1.将失效过期时间随机性分布<br>  缓存击穿:采用互斥锁或者分布式锁来处理<br>  穿透和击穿的区别在于:穿透对于大量key，而击穿针对的是单key<br>  <a id="more"></a><br>3.缓存数据过期后的更新如何设计。<br>  1.请求来的时候，先读缓存，保存一个空key，然后再去读数据库，如果数据库有，再写回到缓存上<br>4.如何做到缓存(比如redis)与DB里的数据一致性，你们项目中用到了什么缓存系统，如何设计的。<br>   1.数据先落库，再删除缓存<br>   2.请求来的时候，先读缓存，如果缓存没有，然后再去读数据库，如果数据库有，再写回到缓存上<br>   但是需要注意的是，缓存的穿透和、雪崩、击穿等问题<br>5.Redis的使用要注意什么，内存设置<br>   1.注意建表规范<br>   2.存储数据，设计k-v时候注意可读性，避免大value等<br>   内存设置：<br>     1.通过info命令来查看<br>     2.最好设置max memory 不要超过机器最大内存<br>7.当前redis集群有哪些玩法，各自优缺点，场景。<br>   1.官方的cluser方案；<br>       提出了槽(slot)的概念，16384个，对于Redis的键值对进行散列，分配到这些槽中的一个，然后用节点对应着每一个槽，官方推荐将节点配置成主从，假如主节点失效，通过选举算法会从salve中选出来一个，完全去中心化，配置比较简单，但是出来较晚，使用者不是很多<br>   2.codis；</p>
+<p>   3.哨兵；</p>
+<p>8.Redis的并发竞争问题如何解决，了解Redis事务的CAS操作吗。<br>   key 并发写的问题，<br>   1.可以使用乐观锁来处理<br>   2.使用分布式锁来处理<br>9.Redis的选举算法和流程是怎样的。<br>      Raft协议，通过心跳和选举算法实现哨兵， 主观失效和客观失效，<br>10.redis的持久化的机制，aof和rdb的区别。<br>    RDB 就是在不同的时间点，将redis存储的数据生成快照并存储到磁盘等介质上；<br>       通过bgSave命令触发，从主进程fork()一个子进程来，生成父进程内存中数据快照，然后再替换原文件，  fork会阻塞父进程<br>       优点:1.二进制文件，适合全量备份<br>            2.执行速度比AOF要快<br>        缺点：<br>            1.新老版本的RDB文件不一定兼容<br>            ２.没法做到秒级<br>            ３.fork属于重量操作，不能轻易操作<br>    AOF  持久化记录服务器执行的所有写操作命令<br>        1.将写命令写道缓冲区<br>        2.AOF缓冲区将根据相关策略向磁盘上同步<br>        3.因为AOF文件会越变越大，需要定时对AOF文件重写，达到压缩的目的<br>11.redis的集群怎么同步的数据的。</p>
+<p>12.知道哪些redis的优化操作。<br>    1.让键名保持简短,可读性更强<br>    2.对key最好都带上过期时间<br>    3.避免超大容量key<br>13.Reids的主从复制机制原理。<br>    分为两种复制:<br>    从节点使用psync()来实现同步<br>       1.全量同步<br>           1.主服务器收到同步请求，执行bgsave命令，同时使用缓冲区暂存命令<br>           2.bgsave完成后将rdb文件发送给从服务器，从服务器收到RDB文件后，将数据保存到磁盘，然后加载到内存中<br>           3.然后主服务器再将缓冲区的命令发给从服务器，从服务器执行这些命令<br>        2.部分同步  主要用于节点丢失，做数据补发<br>            主从节点分别保存着一个数据偏移量，来验证数据的一致性<br>            从节点把自身偏移量发给主节点，主节点根据偏移量把挤压缓冲区中数据发送给从节点<br>14.Redis的线程模型是什么。<br>    多路复用IO<br>15.Redis的淘汰策略<br>    volatile-lru： 只对设置了过期时间的key进行LRU（默认值）<br>    noeviction ： 永不过期，返回错误</p>
+<pre><code>volatile-random：过期key随机删除
+ volatile-ttl ： 删除即将过期的
+
+  allkeys-random： 全量Key中随机删除
+  allkeys-lru ：   全量Key进行LRU</code></pre><p>16.热点Key问题<br>    1.使用互斥锁来实现，只允许一个线程构建缓存<br>    2.key”永久”存储<br>    3.对热点问题先一步业务分析，可以将数据分布到集群中<br>17.Redis 高效问题<br>     1.绝大部分请求是纯粹的内存操作（非常快速）<br>     2.采用单线程,避免了不必要的上下文切换和竞争条件<br>     3.非阻塞IO<br>15.Memcache的原理，哪些数据适合放在缓存中。</p>
+<p>16.redis和memcached 的内存管理的区别。<br>17.简述本地缓存和分布式缓存和优缺点。<br>   本地缓存<br>    优点：性能高，没有网络消耗<br>    缺点：没有持久化机制，难保持数据一致性，存储数量小，受GC影响<br>   分布式缓存：<br>   优点：数据集中，易于维护数据一致性，中间件可以实现对内存的统一管理，便于水平扩容<br>   缺点: 有网络以及序列化和反序列化消耗，一般以来中间件来处理</p>
+<p>18.本地缓存在并发使用时的注意事项。</p>
+<p>19.Ehcache原理 有几种<br>   1 FIFO，先进先出<br>   2 LFU，最少被使用，缓存的元素有一个hit属性，hit值最小的将会被清出缓存。<br>   3 LRU，最近最少使用的，缓存的元素有一个时间戳，当缓存容量满了，而又需要腾出地方来缓存新的元素的时候，</p>
 ]]></content>
       <categories>
         <category>技术</category>
       </categories>
       <tags>
         <tag>面试</tag>
+        <tag>缓存</tag>
         <tag>分布式</tag>
-        <tag>消息队列</tag>
       </tags>
   </entry>
   <entry>
@@ -220,65 +280,6 @@ LinkedBlockingQueue的容量是没有上限的（说的不准确，在不指定�
       <tags>
         <tag>面试</tag>
         <tag>分布式</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Linux和网络</title>
-    <url>/2020/04/18/Linux%E5%92%8C%E7%BD%91%E7%BB%9C/</url>
-    <content><![CDATA[<p><strong>TCP与HTTP</strong></p>
-<ol>
-<li><p>HTTPS的加密方式是什么，讲讲整个加密解密流程。<br> 1.客户端（通常是浏览器）先向服务器发出加密通信的请求，发送协议版本，客户端生成随机数，加密方法等等<br> 2.服务端收到请求后回应，内容包含协议版本、服务端生成的随机数、加密方式、服务器证书<br> 3.客户端收到服务器回应以后，首先验证服务器证书。如果证书不是可信机构颁布、或者证书中的域名与实际域名不一致、或者证书已经过期，就会向访问者显示一个警告，由其选择是否还要继续通信。<br>  如果证书没有问题，客户端就会从证书中取出服务器的公钥。然后，向服务器发送下面三项信息。<br>   (1) 一个随机数。该随机数用服务器公钥加密，防止被窃听。<br>   (2) 编码改变通知，表示随后的信息都将用双方商定的加密方法和密钥发送。<br>   (3) 客户端握手结束通知，表示客户端的握手阶段已经结束。这一项同时也是前面发送的所有内容的hash值，用来供服务器校验。<br> 4.服务器收到客户端的第三个随机数pre-master key之后，计算生成本次会话所用的”会话密钥”。然后，向客户端最后发送下面信息。<br>   (1)编码改变通知，表示随后的信息都将用双方商定的加密方法和密钥发送。<br>   (2)服务器握手结束通知，表示服务器的握手阶段已经结束。这一项同时也是前面发送的所有内容的hash值，用来供客户端校验。</p>
-   <a id="more"></a></li>
-<li><p>http1.0和http1.1有什么区别。</p>
-</li>
-<li><p>TCP三次握手和四次挥手的流程，为什么断开连接要4次,如果握手只有两次，会出现什么。<br> 三次握手</p>
-<pre><code>1.客户端将SYN位置设为1，随机产生一个值，并将数据包发给服务端，服务端进入等待状态
-2.服务端向服务端发送请求，并进入等待接受状态
-3.客户端回应客户端收到请求，然后开始通信</code></pre><p> 四次挥手</p>
-<pre><code>因为TCP/IP协议是全双工通信
- 1.第一次挥手：Client发送一个FIN，用来关闭Client到Server的数据传送，Client进入FIN_WAIT_1状态。
- 2.第二次挥手：Server收到FIN后，发送一个ACK给Client，确认序号为收到序号+1（与SYN相同，一个FIN占用一个序号），Server进入CLOSE_WAIT状态。
- 3.第三次挥手：Server发送一个FIN，用来关闭Server到Client的数据传送，Server进入LAST_ACK状态。
- 4.第四次挥手：Client收到FIN后，Client进入TIME_WAIT状态，接着发送一个ACK给Server，确认序号为收到序号+1，Server进入CLOSED状态，完成四次挥手。</code></pre></li>
-<li><p>TIME_WAIT和CLOSE_WAIT的区别。<br>  CLOSE_WAIT是服务端<br>  TIME_WAIT是客户端</p>
-</li>
-<li><p>说说你知道的几种HTTP响应码，比如200, 302, 404。</p>
-</li>
-<li><p>当你用浏览器打开一个链接（如：<a href="http://www.javastack.cn/" target="_blank" rel="noopener">http://www.javastack.cn</a>）的时候，计算机做了哪些工作步骤。<br>   1.DNS解析<br>   2.TCP连接<br>   3.发送HTTP请求<br>   4.服务器处理请求并返回HTTP报文<br>   5.浏览器解析渲染页面<br>   6.连接结束</p>
-</li>
-<li><p>TCP/IP如何保证可靠性，说说TCP头的结构。</p>
-</li>
-<li><p>如何避免浏览器缓存。</p>
-</li>
-<li><p>如何理解HTTP协议的无状态性。<br> 无状态是指协议对于事务处理没有记忆能力，服务端不知道客户端什么状态</p>
-</li>
-<li><p>简述Http请求get和post的区别以及数据包格式。</p>
-</li>
-<li><p>HTTP有哪些method</p>
-</li>
-<li><p>简述HTTP请求的报文格式。</p>
-</li>
-<li><p>HTTP的长连接是什么意思。<br> 长连接就是客户端和服务端的TCP连接不会关闭</p>
-</li>
-<li><p>Http和https的三次握手有什么区别。</p>
-</li>
-</ol>
-<p>http状态码：200成功，303重定向 304   没有找到方法    403Forbidden 404 未找到页面 500 系统异常    502Bad Gateway  503  服务不可用</p>
-<ol start="15">
-<li>什么是分块传送。</li>
-<li>Session和cookie的区别。<br> 1.存取方式的不同  <pre><code>Cookie中只能保管ASCII字符串，
-Session中能够存取任何类型的数据</code></pre> 2.隐私策略的不同<pre><code>Cookie存储在客户端阅读器中，对客户端是可见的，
-Session存储在服务器上，对客户端是透明的，不存在敏感信息泄露的风险。</code></pre>3.服务器压力的不同<br>   Session存储在服务器上，请求量大会比较耗费内存<br>   Cookie保管在客户端，不占用服务器资源。<br>4.跨域支持上的不同<br>   Cookie支持跨域名访问<br>   Session仅在他所在的域名内有效。</li>
-<li>v                          </li>
-</ol>
-<p>19.应用层—表示层—-会话层—–传输层—–网络层——数据链路层——-物理层</p>
-]]></content>
-      <categories>
-        <category>技术</category>
-      </categories>
-      <tags>
-        <tag>面试</tag>
-        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -340,20 +341,19 @@ Session存储在服务器上，对客户端是透明的，不存在敏感信息�
       </tags>
   </entry>
   <entry>
-    <title>分布式缓存</title>
-    <url>/2020/04/18/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/</url>
-    <content><![CDATA[<p><strong>缓存</strong><br>1.Redis的数据结构都有哪些。<br>  String  hash  list  set soreSet<br>2.如何防止缓存穿透、雪崩和击穿。<br>  缓存穿透:1.布隆过滤器(存在误杀) 2.存储空null，但存活时间很短5分钟<br>  缓存雪崩:1.将失效过期时间随机性分布<br>  缓存击穿:采用互斥锁或者分布式锁来处理<br>  穿透和击穿的区别在于:穿透对于大量key，而击穿针对的是单key<br>  <a id="more"></a><br>3.缓存数据过期后的更新如何设计。<br>  1.请求来的时候，先读缓存，保存一个空key，然后再去读数据库，如果数据库有，再写回到缓存上<br>4.如何做到缓存(比如redis)与DB里的数据一致性，你们项目中用到了什么缓存系统，如何设计的。<br>   1.数据先落库，再删除缓存<br>   2.请求来的时候，先读缓存，如果缓存没有，然后再去读数据库，如果数据库有，再写回到缓存上<br>   但是需要注意的是，缓存的穿透和、雪崩、击穿等问题<br>5.Redis的使用要注意什么，内存设置<br>   1.注意建表规范<br>   2.存储数据，设计k-v时候注意可读性，避免大value等<br>   内存设置：<br>     1.通过info命令来查看<br>     2.最好设置max memory 不要超过机器最大内存<br>7.当前redis集群有哪些玩法，各自优缺点，场景。<br>   1.官方的cluser方案；<br>       提出了槽(slot)的概念，16384个，对于Redis的键值对进行散列，分配到这些槽中的一个，然后用节点对应着每一个槽，官方推荐将节点配置成主从，假如主节点失效，通过选举算法会从salve中选出来一个，完全去中心化，配置比较简单，但是出来较晚，使用者不是很多<br>   2.codis；</p>
-<p>   3.哨兵；</p>
-<p>8.Redis的并发竞争问题如何解决，了解Redis事务的CAS操作吗。<br>   key 并发写的问题，<br>   1.可以使用乐观锁来处理<br>   2.使用分布式锁来处理<br>9.Redis的选举算法和流程是怎样的。<br>      Raft协议，通过心跳和选举算法实现哨兵， 主观失效和客观失效，<br>10.redis的持久化的机制，aof和rdb的区别。<br>    RDB 就是在不同的时间点，将redis存储的数据生成快照并存储到磁盘等介质上；<br>       通过bgSave命令触发，从主进程fork()一个子进程来，生成父进程内存中数据快照，然后再替换原文件，  fork会阻塞父进程<br>       优点:1.二进制文件，适合全量备份<br>            2.执行速度比AOF要快<br>        缺点：<br>            1.新老版本的RDB文件不一定兼容<br>            ２.没法做到秒级<br>            ３.fork属于重量操作，不能轻易操作<br>    AOF  持久化记录服务器执行的所有写操作命令<br>        1.将写命令写道缓冲区<br>        2.AOF缓冲区将根据相关策略向磁盘上同步<br>        3.因为AOF文件会越变越大，需要定时对AOF文件重写，达到压缩的目的<br>11.redis的集群怎么同步的数据的。</p>
-<p>12.知道哪些redis的优化操作。<br>    1.让键名保持简短,可读性更强<br>    2.对key最好都带上过期时间<br>    3.避免超大容量key<br>13.Reids的主从复制机制原理。<br>    分为两种复制:<br>    从节点使用psync()来实现同步<br>       1.全量同步<br>           1.主服务器收到同步请求，执行bgsave命令，同时使用缓冲区暂存命令<br>           2.bgsave完成后将rdb文件发送给从服务器，从服务器收到RDB文件后，将数据保存到磁盘，然后加载到内存中<br>           3.然后主服务器再将缓冲区的命令发给从服务器，从服务器执行这些命令<br>        2.部分同步  主要用于节点丢失，做数据补发<br>            主从节点分别保存着一个数据偏移量，来验证数据的一致性<br>            从节点把自身偏移量发给主节点，主节点根据偏移量把挤压缓冲区中数据发送给从节点<br>14.Redis的线程模型是什么。<br>    多路复用IO<br>15.Redis的淘汰策略<br>    volatile-lru： 只对设置了过期时间的key进行LRU（默认值）<br>    noeviction ： 永不过期，返回错误</p>
-<pre><code>volatile-random：过期key随机删除
- volatile-ttl ： 删除即将过期的
-
-  allkeys-random： 全量Key中随机删除
-  allkeys-lru ：   全量Key进行LRU</code></pre><p>16.热点Key问题<br>    1.使用互斥锁来实现，只允许一个线程构建缓存<br>    2.key”永久”存储<br>    3.对热点问题先一步业务分析，可以将数据分布到集群中<br>17.Redis 高效问题<br>     1.绝大部分请求是纯粹的内存操作（非常快速）<br>     2.采用单线程,避免了不必要的上下文切换和竞争条件<br>     3.非阻塞IO<br>15.Memcache的原理，哪些数据适合放在缓存中。</p>
-<p>16.redis和memcached 的内存管理的区别。<br>17.简述本地缓存和分布式缓存和优缺点。<br>   本地缓存<br>    优点：性能高，没有网络消耗<br>    缺点：没有持久化机制，难保持数据一致性，存储数量小，受GC影响<br>   分布式缓存：<br>   优点：数据集中，易于维护数据一致性，中间件可以实现对内存的统一管理，便于水平扩容<br>   缺点: 有网络以及序列化和反序列化消耗，一般以来中间件来处理</p>
-<p>18.本地缓存在并发使用时的注意事项。</p>
-<p>19.Ehcache原理 有几种<br>   1 FIFO，先进先出<br>   2 LFU，最少被使用，缓存的元素有一个hit属性，hit值最小的将会被清出缓存。<br>   3 LRU，最近最少使用的，缓存的元素有一个时间戳，当缓存容量满了，而又需要腾出地方来缓存新的元素的时候，</p>
+    <title>分布式消息</title>
+    <url>/2020/04/18/%E5%88%86%E5%B8%83%E5%BC%8F%E6%B6%88%E6%81%AF/</url>
+    <content><![CDATA[<p><strong>消息队列</strong></p>
+<p>1.使用过哪些MQ？和其他mq比较有什么优缺点?<br>    activeMQ和RocketMQ<br>2.消息队列的使用场景<br>  1.异步化2.应用解耦<br>3.消息的重发,补充策略<br>    消息重发指的是borker发送给消费者，但消费者处理失败，borker会去重发消息,超过设定次数，lister消费者会给borker发送一个毒ACK消息，borker将该消息放入死信队列中<br>    默认是6次，<br>    重发时间间隔,默认为1s<br>    重投延时<br>  重发需要有幂等性考虑<br>  <a id="more"></a><br>4.如何保证消息的有序性<br>    在MQ中创建多条QUEUE,针对同一规则的数据放入相同队列，比如订单(下单，支付，)，把相同订单号的放入一个队列中，后端消费者消费就行了，<br>    这种可能会有消息重复问题<br>5.消息重复问题<br>    1.保证业务的幂等性(需要在消费段做)<br>    2.保证每条消息都有唯一编号且保证消息处理成功与去重表的日志同时出现</p>
+<p>5.MQ的连接是线程安全的吗，你们公司的MQ服务架构怎样的。</p>
+<p>6.MQ系统的数据如何保证不丢失<br>   消息丢失场景：<br>      1.生产者消息丢失<br>          1.消息确认模式，分配唯一的ID，只有队列写成功了，回传一个确认的ACK<br>          2.开启一个事务，没有被消费者消费，就事务回滚<br>      2.消息队列消息丢失<br>          1.数据持久化<br>          2.消费完成确认后再删除消息<br>      3.消费端消息丢失<br>          消息丢失，未收到确认的ACK，就重发一次，但是做幂等性处理</p>
+<p>7.MQ消息如何做到幂等<br>       1.消息队列分配无关业务、全局唯一的ID<br>       2.业务上自己做消息幂等性<br>8.MQ的消息延迟了怎么处理，</p>
+<p>9.利用mq怎么实现最终一致性<br>    1.保证消息不丢失<br>    2.保证消息能被消费正常处理<br>    3.由数据库来做最终的一致性保证</p>
+<p>10.如何保证消息队列是高可用的<br>   多种Master/slave模式的集群<br>    1.Shared Nothing Master/Slave  master收到消息同步完slave才响应ACK<br>    2.Shared Database Master/Slave master和slave数据共享，然后数据库的排他锁来竞争，谁拿到锁，谁是master<br>    3.Shared File system Master/Slave   共享文件锁<br>    4.Replicated LevelDB Store   利用zookeer来选举</p>
+<p>11.消息可以设置过期时间么，过期了你们一般怎么处理<br>    消息可以设置过期时间，一般过期后会被放入死信队列<br>    死信处理策略：<br>       1.不使用默认死信队列，不便于管理<br>       2.持久化消息不放入死信队列<br>       3.非持久化消息放入<br>       4.过期消息不保存到死信队列<br>       5.丢弃所有死信<br>       6.丢弃指定死信<br>       7.丢弃正则死信</p>
+<p>12.MQ消息积压问题<br>     一般MQ消息积压是因为消费者这边出了问题，所以思路是：<br>          1.先解决消费者的问题，让其能正常消费<br>          2.提升消费者的消费能力，紧急扩容<br>          3.假如队列满了，就粗暴一点，临时写程序来介入数据消费，写完就丢掉消息<br>15.MQ的技术选型<br>    ActiveMQ<br>      优点:Java开发，相对简单，功能比较完备<br>      缺点:社区不活跃<br>    RocketMQ<br>       优点:社区活跃，大公司里技术支持，功能完备，经得起考验<br>       缺点：<br>    RabbitMQ<br>        优点:<br>        缺点：erlang语言比较少，出问题了不好处理<br>JMS—–&gt;ActiveMq<br>AMQP—–&gt;RockerMQ</p>
+<p>1.JMS<br>  JMS是java的消息服务，JMS的客户端之间可以通过JMS服务进行异步的消息传输。<br>2.JMS消息模型<br>   点对点和发布订阅<br>3.MOM 就是面向消息中间件（Message-oriented middleware），是用于以分布式应用或系统中的异步、松耦合、可靠、可扩展和安全通信的一类软件。MOM 的总体思想是它作为消息发送器和消息接收器之间的消息中介,这种中介提供了一个全新水平的松耦合。<br>4.AMQP，即Advanced Message Queuing Protocol,一个提供统一消息服务的应用层标准高级消息队列协议，是应用层协议的一个开放标准,为面向消息的中间件设计<br>ActiveMq相关知识<br>  1.ActiveMq流程<br>     生产者工作流程:<br>       1.创建连接工厂：ConnectionFactory factory = new ActiveMQConnectionFactory(userName,password,url)<br>       2.创建连接：Connection conn= factory.createConnection();<br>       3.打开连接：conn.start()<br>       4.创建会话并设置会话级别：Session session = conn.createSession(true,Session.SESSION_TRANSACTED);<br>       5.创建消息队列：Queue queue = session.createQueue(name);<br>       6.创建或者获取生产者：MessageProducer produer = session.createProducer(queue);<br>       7.生成者发送消息：producer.send();<br>       8.提交会话事务：session.commit();<br>      消费者工作流程:<br>          1.创建连接工厂：ConnectionFactory factory = new ActiveMQConnectionFactory(userName,password,url)<br>          2.创建连接：Connection conn= factory.createConnection();<br>          3.开始连接：conn.start()<br>          4.创建会话并设置会话级别：Session session = conn.createSession(true,Session.SESSION_TRANSACTED);<br>          5.创建消息队列：Queue queue = session.createQueue(name);<br>          6.创建或者获取生产者：MessageProducer produer = session.createProducer(queue);<br>          7.生成者发送消息：producer.send();<br>          8.提交会话事务：session.commit();</p>
+<p>  2.消息存储方式<br>     1.KahaDB存储(默认方式)<br>         KahaDB的存储原理：<br>           在data/kahadb这个目录下，会生成四个文件：<br>               Ø db.data 它是消息的索引文件，本质上是B-Tree（B树），使用B-Tree作为索引指向db-.log里面存储的消息<br>               Ø db.redo 用来进行消息恢复<br>               Ø db-.log 存储消息内容。新的数据以APPEND的方式追加到日志文件末尾。属于顺序写入，因此消息存储是比较快的。默认是32M，达到阀值会自动递增<br>               Ø lock文件 锁，表示当前获得kahadb读写权限的broker<br>     2.JDBC存储<br>     3.内存<br>  3. 支持同步、异步两种发送模式将消息发送到broker上，<br>         同步会要求broker给一个响应，因为是阻塞操作，会影响到客户端<br>         异步发送者不需要等待broker提供反馈，所以性能相对较高。但是可能会出现消息丢失的情况。</p>
 ]]></content>
       <categories>
         <category>技术</category>
@@ -361,7 +361,7 @@ Session存储在服务器上，对客户端是透明的，不存在敏感信息�
       <tags>
         <tag>面试</tag>
         <tag>分布式</tag>
-        <tag>缓存</tag>
+        <tag>消息队列</tag>
       </tags>
   </entry>
   <entry>
